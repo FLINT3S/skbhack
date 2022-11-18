@@ -42,6 +42,8 @@ services:
         order: start-first
         failure_action: rollback
         delay: 10s
+    networks:
+      - postgres
 
   db:
     image: postgres:13.2
@@ -60,7 +62,33 @@ services:
       placement:
         constraints:
           - "node.role==manager"
+    networks:
+      - postgres
+
+  pgadmin:
+    image: dpage/pgadmin4:6.13
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "sia.ilya.dev@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "skbPassword!2022"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - skb-pgAdmin:/var/lib/pgadmin
+    ports:
+      - 7000:80
+    restart: unless-stopped
+    networks:
+      - postgres
+    deploy:
+      placement:
+        constraints:
+          - "node.role==manager"
 
 volumes:
   skb-database:
     external: true
+  skb-pgAdmin:
+    external: true
+
+networks:
+  postgres:
+    driver: bridge
