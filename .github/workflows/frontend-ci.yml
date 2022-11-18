@@ -25,3 +25,9 @@ jobs:
           context: ./skb-front/
           push: true
           tags: siailyadev/skb-front:latest
+
+      - name: Invoke deployment Portainer hook
+        uses: distributhor/workflow-webhook@v2
+        env:
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          data: '{ "deploy": "true" }'
