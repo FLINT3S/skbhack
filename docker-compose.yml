@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  web:
+    image: siailyadev/skb-front:latest
+    container_name: skb-front
+    restart: always
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+
+  auth:
+    image: siailyadev/skb-auth:latest
+    container_name: skb-auth
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:13.2
+    container_name: skb-db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=skb123456789
+      - POSTGRES_USER=skb
+      - POSTGRES_DB=skb
+    volumes:
+      - skb-database:/var/lib/postgresql/data
+
+volumes:
+  skb-database:
+    external: true
