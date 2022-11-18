@@ -3,7 +3,6 @@ version: "3.9"
 services:
   web:
     image: siailyadev/skb-front:latest
-    container_name: skb-front
     restart: always
     ports:
       - "3000:80"
@@ -24,7 +23,6 @@ services:
 
   auth:
     image: siailyadev/skb-auth:latest
-    container_name: skb-auth
     restart: always
     ports:
       - "5000:5000"
