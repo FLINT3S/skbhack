@@ -1,4 +1,4 @@
-name: Build and push frontend to docker hub registry
+name: Frontend CI
 
 on:
   push:
