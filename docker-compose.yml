@@ -37,7 +37,7 @@ services:
       timeout: 3s
       retries: 12
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 1
         order: start-first
