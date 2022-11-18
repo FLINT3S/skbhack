@@ -29,8 +29,7 @@ services:
     environment:
       - PORT=5000
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     healthcheck:
       test: curl -sS http://127.0.0.1:5000/api/auth/healthcheck || echo 1
       interval: 30s
