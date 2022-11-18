@@ -14,7 +14,7 @@ services:
       timeout: 3s
       retries: 12
     deploy:
-      replicas: 1
+      mode: global
       update_config:
         parallelism: 1
         order: start-first
@@ -36,7 +36,7 @@ services:
       timeout: 3s
       retries: 12
     deploy:
-      replicas: 1
+      mode: global
       update_config:
         parallelism: 1
         order: start-first
@@ -57,6 +57,10 @@ services:
       - POSTGRES_DB=skb
     volumes:
       - skb-database:/var/lib/postgresql/data
+    deploy:
+      placement:
+        constraints:
+          - "node.role==manager"
 
 volumes:
   skb-database:
