@@ -1,0 +1,68 @@
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transform: translateY(0);
+  transition: opacity .5s ease, transform .5s ease;
+}
+
+.slide-down-enter-from,
+.slide-down-leave-to {
+  transform: translateY(-10vh);
+  opacity: 0;
+}
+
+.slide-left-enter, .slide-right-leave-active {
+  transition: all .3s ease;
+  width: 100%;
+  opacity: 0;
+  -webkit-transform: translate(300px, 0);
+  transform: translate(300px, 0);
+}
+
+.slide-left-leave-active, .slide-right-enter {
+  transition: all .3s ease;
+  width: 100%;
+  opacity: 0;
+  -webkit-transform: translate(-300px, 0);
+  transform: translate(-300px, 0);
+}
+
+
+.collapse-right-enter-active, .collapse-right-leave-active {
+  transition: all .5s ease;
+  overflow: hidden;
+}
+
+.collapse-right-enter-from, .collapse-right-leave-to {
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+@keyframes shake-x {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+
+.error-shake {
+  animation: shake-x .05s infinite;
+  animation-iteration-count: 6;
+}
+
+.transition-default {
+  transition: all .3s ease;
+}
