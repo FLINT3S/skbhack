@@ -9,6 +9,18 @@ services:
       - "3000:80"
     environment:
       - NODE_ENV=production
+    healthcheck:
+      test: curl -sS http://127.0.0.1:3000 || echo 1
+      interval: 30s
+      timeout: 3s
+      retries: 12
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        delay: 10s
 
   auth:
     image: siailyadev/skb-auth:latest
@@ -21,6 +33,18 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: curl -sS http://127.0.0.1:5000/api/auth/healthcheck || echo 1
+      interval: 30s
+      timeout: 3s
+      retries: 12
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        delay: 10s
 
   db:
     image: postgres:13.2
