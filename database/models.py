@@ -51,12 +51,14 @@ class User(SQLModel, table=True):
         return user
 
     def set_password(self, password: str):
-        self.password = bcrypt.hashpw(password=password.encode("utf-8"), salt=bcrypt.gensalt())
+        self.password = bcrypt.hashpw(password=password.encode("utf-8"), salt=bcrypt.gensalt()).decode("utf-8")
+        print(self.password)
 
     def check_password(self, password: str) -> bool:
         if self.password is None:
             return False
-        return bcrypt.checkpw(password=password.encode("utf-8"), hashed_password=self.password)
+        return bcrypt.checkpw(password=password.encode("utf-8"),
+                              hashed_password=self.password.encode("utf-8"))
 
 
 class Currency(SQLModel, table=True):

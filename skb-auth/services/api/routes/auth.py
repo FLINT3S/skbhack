@@ -1,13 +1,23 @@
+import jwt
+import os
+
+from database.service import get_session
+from database.models import User, Account, Currency
+
+from dotenv import load_dotenv
+
 from fastapi import APIRouter, Depends
+
 from sqlmodel import Session, select
 
 from starlette import status
 from starlette.responses import Response
 
-from database.service import get_session
-from database.models import User, Account, Currency
-
 from .dtos import *
+
+
+load_dotenv()
+secret_key = os.environ["SECRET_KEY"]
 
 auth_router = APIRouter()
 
@@ -49,7 +59,9 @@ async def login(
     if user is None:
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
     # Create and return jwt token
-    return user.check_password(login_user_dto.password)
+    if user.check_password(str(login_user_dto.password)):
+        return jwt.encode({"some": "payload"}, secret_key, algorithm="HS256")
+    return status.HTTP_400_BAD_REQUEST
 
 
 @auth_router.post("/change_password")
