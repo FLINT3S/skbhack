@@ -71,11 +71,13 @@
                 </n-button>
               </n-card>
 
-              <n-card class="mt-4">
-                <n-button type="primary" @click="$router.push('/admin')">
-                  Панель админиистратора
-                </n-button>
-              </n-card>
+              <transition name="fade">
+                <n-card v-if="isAdminPanelButtonShown" class="mt-4">
+                  <n-button block type="primary" @click="$router.push('/admin')">
+                    Панель админиистратора
+                  </n-button>
+                </n-card>
+              </transition>
             </div>
             <div class="col-12 col-lg-8 mt-3 mt-lg-0">
               <slot></slot>
@@ -115,12 +117,16 @@ import {NLayout} from "naive-ui";
 import CurrencyIndicator from "../components/CurrencyIndicator.vue";
 
 import {storeToRefs} from "pinia";
+import {useRouter} from "vue-router";
 import type {Ref} from "vue";
 
-import type {Account} from "../data/Account";
 import {useMoneyStore} from "../stores/money";
+import type {Account} from "../data/Account";
 import type {Currency} from "../data/Currency";
 
+const router = useRouter();
+
+const isAdminPanelButtonShown = computed(() => router.currentRoute.value.path !== '/admin');
 
 const {
   accounts,

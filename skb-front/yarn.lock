@@ -160,6 +160,59 @@
   resolved "https://registry.npmjs.org/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
 
+"@sentry/browser@7.20.0":
+  version "7.20.0"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-7.20.0.tgz#e917cab48d3bba2fe8a2e3a8987b0bd9b9149db8"
+  integrity sha512-L84CdB7DPQ2ohVcWh/KivemndWSZyXRvBZBr+tHFlQchzcaZZ/8lIPvjwvb8OJhzhecDq6JCAyUxaZwyItdyAg==
+  dependencies:
+    "@sentry/core" "7.20.0"
+    "@sentry/types" "7.20.0"
+    "@sentry/utils" "7.20.0"
+    tslib "^1.9.3"
+
+"@sentry/core@7.20.0":
+  version "7.20.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.20.0.tgz#7becd848c982d5422627f69c4061d5914946c54a"
+  integrity sha512-8dIHk8niyEyVayUQpgECHnV2p444nPBjIyuQrtkdTxL7sBLC5+Y0DhRjxg9cJyZe/bZnXVerGkgcA7niKW4W8A==
+  dependencies:
+    "@sentry/types" "7.20.0"
+    "@sentry/utils" "7.20.0"
+    tslib "^1.9.3"
+
+"@sentry/tracing@^7.20.0":
+  version "7.20.0"
+  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-7.20.0.tgz#346bf72bc5574ac78de43bd8ab6f6027f8b64cbd"
+  integrity sha512-qg3sMvjuMQl/NEaF8I2IpvUcJ4HGGVIwEqqqZ6hkeHXIKt02p6f+nls45pVhluMiNHAaQJ+vefMTUc3E1yZwDA==
+  dependencies:
+    "@sentry/core" "7.20.0"
+    "@sentry/types" "7.20.0"
+    "@sentry/utils" "7.20.0"
+    tslib "^1.9.3"
+
+"@sentry/types@7.20.0":
+  version "7.20.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.20.0.tgz#ace232e00407355dccedf65e27471635b4331265"
+  integrity sha512-x17ddduGWqW95neBFVvxzmInb5WXVw+2PcNASHXpGFhi7v2gz2a7/w2CcIKxsqODNnc+z/k1t0Y+uy9B6aH6ag==
+
+"@sentry/utils@7.20.0":
+  version "7.20.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.20.0.tgz#cca09e2256b64bfb41a78c89af3c88fcc7ca84c2"
+  integrity sha512-4lc122TFgkaCAvoPRy+uc5vgOCumTa/2nPkzCSxVsezQs+ebHxyMJQK7GWBLI6P+EzKfEjlgyMzRWaPJ3iJatA==
+  dependencies:
+    "@sentry/types" "7.20.0"
+    tslib "^1.9.3"
+
+"@sentry/vue@^7.20.0":
+  version "7.20.0"
+  resolved "https://registry.yarnpkg.com/@sentry/vue/-/vue-7.20.0.tgz#b06e0947daa178a802f284c3a33e4e85640e1883"
+  integrity sha512-yqBWREIAsgRBdeVxOvHy/x4JyzMUe2YG9uF4Rw6NRUWiP9TV2RR+TRRDB0H2h4x1UV6c1ZOKAlfWfs8ZOAScVw==
+  dependencies:
+    "@sentry/browser" "7.20.0"
+    "@sentry/core" "7.20.0"
+    "@sentry/types" "7.20.0"
+    "@sentry/utils" "7.20.0"
+    tslib "^1.9.3"
+
 "@sideway/address@^4.1.3":
   version "4.1.4"
   resolved "https://registry.npmjs.org/@sideway/address/-/address-4.1.4.tgz"
@@ -3452,7 +3505,7 @@ treemate@^0.3.11:
   resolved "https://registry.npmjs.org/treemate/-/treemate-0.3.11.tgz"
   integrity sha512-M8RGFoKtZ8dF+iwJfAJTOH/SM4KluKOKRJpjCMhI8bG3qB74zrFoArKZ62ll0Fr3mqkMJiQOmWYkdYgDeITYQg==
 
-tslib@^1.8.1:
+tslib@^1.8.1, tslib@^1.9.3:
   version "1.14.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==

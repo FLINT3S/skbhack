@@ -27,7 +27,10 @@ declare module '@vue/runtime-core' {
     NModal: typeof import('naive-ui')['NModal']
     NSelect: typeof import('naive-ui')['NSelect']
     NSpace: typeof import('naive-ui')['NSpace']
+    NTabPane: typeof import('naive-ui')['NTabPane']
+    NTabs: typeof import('naive-ui')['NTabs']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UserCell: typeof import('./src/components/UserCell.vue')['default']
   }
 }
