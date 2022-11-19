@@ -51,6 +51,7 @@ class Currency(SQLModel, table=True):
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     name: constr(min_length=1, max_length=64)
     ticker: constr(min_length=1, max_length=8)
+    symbol: constr(min_length=1, max_length=1)
 
 
 class Account(SQLModel, table=True):

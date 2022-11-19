@@ -3,7 +3,7 @@ from typing import Tuple
 from fastapi import APIRouter, Depends, Form
 from sqlmodel import Session, select
 from starlette import status
-from starlette.responses import Response
+from starlette.responses import Response, JSONResponse
 from pycbrf import ExchangeRates
 
 from ...database.service import get_session
@@ -19,12 +19,10 @@ async def transfer_currency(
         amount: float = Form(),
         session: Session = Depends(get_session)
 ):
-    from_account = session.exec(
-        select(Account).where(Account.id == from_id)
-    ).first()
-    to_account = session.exec(
-        select(Account).where(Account.id == to_id)
-    ).first()
+    from_account = session.exec(select(Account).where(Account.id == from_id)).first()
+    to_account = session.exec(select(Account).where(Account.id == to_id)).first()
+    if from_account is None or to_account is None:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
 
     transactions = _create_transactions(from_account, to_account, amount)
 
@@ -72,15 +70,72 @@ async def create_account(
         currency_id: UUID = Form(),
         session: Session = Depends(get_session)
 ):
-    user = session.exec(
-        select(User).where(User.id == user_id)
-    ).first()
-    currency = session.exec(
-        select(Currency).where(Currency.id == currency_id)
-    ).first()
+    user = session.exec(select(User).where(User.id == user_id)).first()
+    if user is None:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+    currency = session.exec(select(Currency).where(Currency.id == currency_id)).first()
+    if currency is None:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
 
     account = Account.get_instance(user, currency)
     session.add(account)
     session.commit()
 
-    pass
+
+@balance_router.get("/accountHistory/{account_id}")
+async def get_account_history(
+        account_id: UUID,
+        session: Session = Depends(get_session)
+):
+    account = session.exec(select(Account).where(Account.id == account_id)).first()
+    if account is None:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+    response = {}
+    for transaction in account.transactions:
+        if transaction.bought_at.date() not in response.keys():
+            response[transaction.bought_at.date()] = {
+                "day": int(round(transaction.bought_at.timestamp())),
+                "transactions": []
+            }
+        response[transaction.bought_at.date()]["transactions"].append({
+            "description": transaction.description,
+            "datetime": int(round(transaction.bought_at.timestamp())),
+            "amount": transaction.amount,
+            "currency": {
+                "ticker": account.currency.ticker,
+                "symbol": account.currency.symbol
+            },
+        })
+    for day in response.keys():
+        response[day]["transactions"].sort(key=lambda t: t["datetime"], reverse=True)
+    return JSONResponse(content=list(response.values()))
+
+
+@balance_router.get("/userHistory/{user_id}")
+async def get_account_history(
+        user_id: UUID,
+        session: Session = Depends(get_session)
+):
+    user = session.exec(select(User).where(User.id == user_id)).first()
+    if user is None:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+    response = {}
+    for account in user.accounts:
+        for transaction in account.transactions:
+            if transaction.bought_at.date() not in response.keys():
+                response[transaction.bought_at.date()] = {
+                    "day": int(round(transaction.bought_at.timestamp())),
+                    "transactions": []
+                }
+            response[transaction.bought_at.date()]["transactions"].append({
+                "description": transaction.description,
+                "datetime": int(round(transaction.bought_at.timestamp())),
+                "amount": transaction.amount,
+                "currency": {
+                    "ticker": account.currency.ticker,
+                    "symbol": account.currency.symbol
+                },
+            })
+    for day in response.keys():
+        response[day]["transactions"].sort(key=lambda t: t["datetime"], reverse=True)
+    return JSONResponse(content=list(response.values()))
