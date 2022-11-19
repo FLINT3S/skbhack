@@ -1,8 +1,8 @@
 import jwt
 import os
 
-from database.service import get_session
-from database.models import User, Account, Currency
+from ...database.service import get_session
+from ...database.models import User, Account, Currency
 
 from dotenv import load_dotenv
 
@@ -46,7 +46,7 @@ async def register(
     session.add(account)
     session.add(user)
     session.commit()
-    return user
+    return jwt.encode(user, secret_key, algorithm="HS256")
 
 
 @auth_router.post("/login")
@@ -60,7 +60,7 @@ async def login(
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
     # Create and return jwt token
     if user.check_password(str(login_user_dto.password)):
-        return jwt.encode({"some": "payload"}, secret_key, algorithm="HS256")
+        return jwt.encode(user, secret_key, algorithm="HS256")
     return status.HTTP_400_BAD_REQUEST
 
 

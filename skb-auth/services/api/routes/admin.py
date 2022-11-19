@@ -3,8 +3,8 @@ from sqlmodel import Session, select
 
 from starlette import status
 
-from database.service import get_session
-from database.models import User, Role
+from ...database.service import get_session
+from ...database.models import User, Role
 
 from .dtos import *
 
