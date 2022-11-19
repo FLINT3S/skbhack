@@ -52,7 +52,6 @@ class User(SQLModel, table=True):
 
     def set_password(self, password: str):
         self.password = bcrypt.hashpw(password=password.encode("utf-8"), salt=bcrypt.gensalt()).decode("utf-8")
-        print(self.password)
 
     def check_password(self, password: str) -> bool:
         if self.password is None:
