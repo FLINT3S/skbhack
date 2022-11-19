@@ -36,8 +36,8 @@ export default defineComponent({
       required: true,
     },
     blocked: {
-      type: Boolean,
-      required: true,
+      type: [Boolean],
+      default: false,
     }
   },
 });

@@ -55,7 +55,7 @@
 
         <div class="text-center w-75 mx-auto">
           <n-h4>Выберете счёт</n-h4>
-          <div v-if="selectedUser?.value?.loadingAccounts">
+          <div v-if="selectedUser?.loadingAccounts">
             <n-skeleton height="35px"></n-skeleton>
             <n-skeleton class="mt-2" height="35px"></n-skeleton>
             <n-skeleton class="mx-auto mt-2" height="75px" width="150px"></n-skeleton>
