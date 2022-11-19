@@ -26,7 +26,7 @@ class User(SQLModel, table=True):
     password: constr(min_length=60, max_length=60)
     avatar_link: str
     accounts: List["Account"] = Relationship(
-        back_populates="users",
+        back_populates="user",
         sa_relationship_kwargs={"lazy": "selectin"},
     )
 
@@ -57,9 +57,14 @@ class Account(SQLModel, table=True):
         back_populates="accounts",
         sa_relationship_kwargs={"lazy": "selectin"},
     )
-    value: int
+    user_id: UUID = Field(default=None, foreign_key="users.id")
+    amount: float
     currency: Currency = Relationship(
-        back_populates="accounts",
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
+    currency_id: UUID = Field(default=None, foreign_key="currencies.id")
+    transactions: List["Transaction"] = Relationship(
+        back_populates="account",
         sa_relationship_kwargs={"lazy": "selectin"},
     )
 
@@ -72,11 +77,12 @@ class Transaction(SQLModel, table=True):
         back_populates="transactions",
         sa_relationship_kwargs={"lazy": "selectin"},
     )
+    account_id: UUID = Field(default=None, foreign_key="accounts.id")
     amount: float
     rate: float
     currency: Currency = Relationship(
-        back_populates="transactions",
         sa_relationship_kwargs={"lazy": "selectin"},
     )
+    currency_id: UUID = Field(default=None, foreign_key="currencies.id")
     bought_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     description: constr(min_length=1, max_length=64)
