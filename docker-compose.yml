@@ -27,7 +27,6 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - PORT=5000
       - CONNECTION_STRING
     depends_on:
       - db
@@ -52,7 +51,6 @@ services:
     ports:
       - "5001:5001"
     environment:
-      - PORT=5001
       - CONNECTION_STRING
     depends_on:
       - db
