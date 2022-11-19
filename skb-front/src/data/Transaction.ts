@@ -1,6 +1,11 @@
 import type {Currency} from "../data/Currency";
 import {formatMoney, removeSigns} from "../utils/strings";
 
+export type TransactionsData = {
+  day: number
+  transactions: Transaction[]
+}
+
 export class Transaction {
   description: string
   datetime: number

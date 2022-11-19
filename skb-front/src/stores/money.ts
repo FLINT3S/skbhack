@@ -1,8 +1,11 @@
 import {computed, ref} from "vue";
 import {defineStore} from "pinia";
+
 import {Account} from "../data/Account";
 import {Currency} from "../data/Currency";
+import type {TransactionsData} from "../data/Transaction";
 import {Transaction} from "../data/Transaction";
+
 
 const __mockData = {
   currencies: [
@@ -70,18 +73,106 @@ const __mockData = {
       amountUSD: 300,
     }
   ],
-  transactions: [
+  transactionsData: [
     {
-      description: "Перевод из RUB в USD",
-      datetime: 1668861145,
-      amount: -1.0,
-      currency: {ticker: "RUB", symbol: "₽"}
+      "day": 1668866694,
+      "transactions": [
+        {
+          "description": "Перевод из USD в RUB",
+          "datetime": 1668872303,
+          "amount": -1.0,
+          "currency": {
+            "ticker": "USD",
+            "symbol": "$"
+          }
+        },
+        {
+          "description": "Перевод из USD в RUB",
+          "datetime": 1668872303,
+          "amount": 60.37409999999999,
+          "currency": {
+            "ticker": "RUB",
+            "symbol": "₽"
+          }
+        },
+        {
+          "description": "Перевод из USD в RUB",
+          "datetime": 1668866694,
+          "amount": -1.0,
+          "currency": {
+            "ticker": "USD",
+            "symbol": "$"
+          }
+        },
+        {
+          "description": "Перевод из USD в RUB",
+          "datetime": 1668866694,
+          "amount": 60.37409999999999,
+          "currency": {
+            "ticker": "RUB",
+            "symbol": "₽"
+          }
+        },
+        {
+          "description": "Перевод из USD в RUB",
+          "datetime": 1668866693,
+          "amount": 60.37409999999999,
+          "currency": {
+            "ticker": "RUB",
+            "symbol": "₽"
+          }
+        },
+        {
+          "description": "Перевод из USD в RUB",
+          "datetime": 1668866688,
+          "amount": 60.37409999999999,
+          "currency": {
+            "ticker": "RUB",
+            "symbol": "₽"
+          }
+        },
+        {
+          "description": "Перевод из RUB в USD",
+          "datetime": 1668861145,
+          "amount": 0.016563393905664848,
+          "currency": {
+            "ticker": "USD",
+            "symbol": "$"
+          }
+        },
+        {
+          "description": "Перевод из RUB в USD",
+          "datetime": 1668861145,
+          "amount": -1.0,
+          "currency": {
+            "ticker": "RUB",
+            "symbol": "₽"
+          }
+        }
+      ]
     },
     {
-      description: "Перевод из RUB в USD",
-      datetime: 1668861145,
-      amount: -1.0,
-      currency: {ticker: "RUB", symbol: "₽"}
+      "day": 1660917888,
+      "transactions": [
+        {
+          "description": "Перевод из USD в RUB",
+          "datetime": 1660917893,
+          "amount": -1.0,
+          "currency": {
+            "ticker": "USD",
+            "symbol": "$"
+          }
+        },
+        {
+          "description": "Перевод из USD в RUB",
+          "datetime": 1660917888,
+          "amount": -1.0,
+          "currency": {
+            "ticker": "USD",
+            "symbol": "$"
+          }
+        }
+      ]
     }
   ]
 }
@@ -93,7 +184,10 @@ export const useMoneyStore = defineStore('money', () => {
 
   const totalUSD = computed(() => accounts.value.reduce((acc, account) => acc + account.amountUSD, 0))
 
-  const transactions = ref<Transaction[]>(__mockData.transactions.map(transaction => new Transaction(transaction.description, transaction.datetime, transaction.amount, Currency.fromJSON(transaction.currency))))
+  const transactionsData = ref<TransactionsData[]>(__mockData.transactionsData.map(d => ({
+    ...d,
+    transactions: d.transactions.map(t => new Transaction(t.description, t.datetime, t.amount, Currency.fromJSON(t.currency)))
+  })))
 
   const groupedAccounts = computed(() => {
     const grouped = new Map<string, Account[]>()
@@ -113,6 +207,6 @@ export const useMoneyStore = defineStore('money', () => {
     currencies,
     totalUSD,
     groupedAccounts,
-    transactions
+    transactionsData
   }
 });
