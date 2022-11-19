@@ -19,6 +19,8 @@ async def transfer_currency(transfer_dto: TransferDto, session: Session = Depend
     to_account = session.exec(select(Account).where(Account.id == transfer_dto.to_id)).first()
     if from_account is None or to_account is None:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
+    if transfer_dto.amount <= 0:
+        return Response(status_code=status.HTTP_400_BAD_REQUEST)
 
     transactions = _create_transactions(from_account, to_account, transfer_dto.amount)
 
@@ -55,7 +57,7 @@ def _get_currency_cost(from_ticker: str, to_ticker: str) -> float:
     rates = ExchangeRates()
 
     def get_cost(ticker: str) -> float:
-        return float(1.0 if ticker == "RUB" else rates[ticker].value)
+        return float(1.0 if ticker == "RUB" else rates[ticker].rate)
 
     return get_cost(to_ticker) / get_cost(from_ticker)
 
