@@ -79,7 +79,6 @@ async def replenishment(change_balance_dto: ChangeBalanceDto, session: Session =
     return Response(status_code=status.HTTP_200_OK)
 
 
-
 @balance_router.post("/createAccount")
 async def create_account(create_account_dto: CreateAccountDto, session: Session = Depends(get_session)):
     user = session.exec(select(User).where(User.id == create_account_dto.user_id)).first()
