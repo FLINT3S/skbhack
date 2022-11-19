@@ -1,6 +1,6 @@
 from fastapi import APIRouter, FastAPI
 
-from .routes import auth_router, index_router
+from .routes import auth_router
 
 
 class APIService:
@@ -17,5 +17,4 @@ class APIService:
         api_router.prefix = "/api"
 
         api_router.include_router(router=auth_router, prefix="/auth", tags=["Auth"])
-        api_router.include_router(router=index_router, prefix="/index", tags=["Index"])
         self.app.include_router(router=api_router)
