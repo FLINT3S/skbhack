@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+psycopg2
+python-dotenv
+pycbrf
+bcrypt
