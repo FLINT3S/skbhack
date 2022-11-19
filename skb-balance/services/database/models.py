@@ -31,7 +31,6 @@ class User(SQLModel, table=True):
     blocked: bool
     role: str = Field(foreign_key=f"{Role.__tablename__}.name")
     password: constr(min_length=60, max_length=60)
-    avatar_link: str
     accounts: List["Account"] = Relationship(
         back_populates="user",
         sa_relationship_kwargs={"lazy": "selectin"},
@@ -48,7 +47,6 @@ class User(SQLModel, table=True):
         user.verify = False
         user.blocked = False
         user.role = "User"
-        user.avatar_link = ""
         user.set_password(password)
         return user
 

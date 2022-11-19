@@ -13,6 +13,12 @@ class Role(SQLModel, table=True):
 
     name: constr(min_length=1, max_length=64) = Field(primary_key=True)
 
+    @staticmethod
+    def get_instance(name: str):
+        role = Role()
+        role.name = name
+        return role
+
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
@@ -25,7 +31,6 @@ class User(SQLModel, table=True):
     blocked: bool
     role: str = Field(foreign_key=f"{Role.__tablename__}.name")
     password: constr(min_length=60, max_length=60)
-    avatar_link: str
     accounts: List["Account"] = Relationship(
         back_populates="user",
         sa_relationship_kwargs={"lazy": "selectin"},
@@ -42,7 +47,6 @@ class User(SQLModel, table=True):
         user.verify = False
         user.blocked = False
         user.role = "User"
-        user.avatar_link = ""
         user.set_password(password)
         return user
 
@@ -62,6 +66,15 @@ class Currency(SQLModel, table=True):
     name: constr(min_length=1, max_length=64)
     ticker: constr(min_length=1, max_length=8)
     symbol: constr(min_length=1, max_length=1)
+
+    @staticmethod
+    def get_instance(id: UUID, name: str, ticker: str, symbol: str):
+        currency = Currency()
+        currency.id = id
+        currency.name = name
+        currency.ticker = ticker
+        currency.symbol = symbol
+        return currency
 
 
 class Account(SQLModel, table=True):
@@ -86,6 +99,7 @@ class Account(SQLModel, table=True):
     @staticmethod
     def get_instance(user: User, currency: Currency):
         account = Account()
+        account.amount = 0
         account.user = user
         account.currency = currency
         return account
