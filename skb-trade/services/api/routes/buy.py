@@ -6,11 +6,17 @@ from pycbrf import ExchangeRates
 from starlette import status
 from starlette.responses import Response
 
-from ...database.models import *
-from ...database.service import get_session
-from dtos import *
+from database.models import *
+from database.service import get_session
+from .dtos import *
 
 buy_router = APIRouter()
+
+
+# For docker
+@buy_router.get("/healthcheck")
+async def healthcheck():
+    return {"status": "ok"}
 
 
 @buy_router.post("/transfer")

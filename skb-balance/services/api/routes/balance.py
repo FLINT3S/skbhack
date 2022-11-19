@@ -3,11 +3,17 @@ from sqlmodel import Session, select
 from starlette import status
 from starlette.responses import Response, JSONResponse
 
-from ...database.service import get_session
-from ...database.models import *
+from database.service import get_session
+from database.models import *
 from .dtos import *
 
 balance_router = APIRouter()
+
+
+# For docker
+@balance_router.get("/healthcheck")
+async def healthcheck():
+    return {"status": "ok"}
 
 
 @balance_router.post("/createAccount")
