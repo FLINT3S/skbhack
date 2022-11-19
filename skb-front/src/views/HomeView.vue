@@ -85,7 +85,7 @@ import ColorBalance from "../components/ColorBalance.vue";
 import {useMoneyStore} from "../stores/money";
 import type {Account} from "../data/Account";
 import type {Currency} from "../data/Currency";
-import {TransactionsData} from "../data/Transaction";
+import type {TransactionsData} from "../data/Transaction";
 
 import {getDayAndMonth} from "../utils/strings";
 
