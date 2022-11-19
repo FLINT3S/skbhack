@@ -135,7 +135,7 @@ async def get_account_history(user_id: UUID, session: Session = Depends(get_sess
     return JSONResponse(content=response)
 
 
-@balance_router.post("/changeBalance/{account_id}")
+@balance_router.post("/changeBalance")
 async def change_account_balance(change_balance_dto: ChangeBalanceDto, session: Session = Depends(get_session)):
     account = session.exec(select(Account).where(Account.id == change_balance_dto.account_id)).first()
     if account is None:
