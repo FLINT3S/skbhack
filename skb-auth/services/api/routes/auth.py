@@ -6,7 +6,7 @@ from ...database.models import User, Account, Currency
 
 from dotenv import load_dotenv
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from sqlmodel import Session, select
 
@@ -33,6 +33,10 @@ async def register(
         create_user_dto: CreateUserDto,
         session: Session = Depends(get_session)
 ):
+    if session.exec(select(User).where(User.login == create_user_dto.login)).first() is not None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Такой логин уже есть в базе.")
+
     user = User.get_instance(
         login=create_user_dto.login,
         firstname=create_user_dto.firstname,
@@ -58,12 +62,14 @@ async def login(
     user_login = login_user_dto.login
     user = session.exec(select(User).where(User.login == user_login)).first()
     if user is None:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Такого пользователя не существует.")
     # Create and return jwt token
     user.id = str(user.id)
     if user.check_password(str(login_user_dto.password)):
         return jwt.encode(user.dict(), secret_key, algorithm="HS256")
-    return status.HTTP_400_BAD_REQUEST
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="Пароли не совпадают.")
 
 
 @auth_router.post("/change_password")
@@ -74,9 +80,11 @@ async def change_password(
     user_login = login_user_dto.login
     user = session.exec(select(User).where(User.login == user_login)).first()
     if user is None:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Такого пользователя не существует.")
 
-    if user.check_password(login_user_dto.password):
-        user.set_password(login_user_dto.password)
+    if user.check_password(str(login_user_dto.password)):
+        user.set_password(str(login_user_dto.password))
     else:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Пароли не совпадают.")
