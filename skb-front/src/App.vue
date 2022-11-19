@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="darkTheme" :locale="ruRU" :date-locale="dateRuRU">
+  <n-config-provider :theme="lightTheme" :locale="ruRU" :date-locale="dateRuRU" :theme-overrides="themeOverrides">
     <component :is="layout">
       <n-message-provider>
         <router-view v-slot="{ Component }">
@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import {
-  darkTheme,
+  lightTheme,
   dateRuRU,
   NConfigProvider,
   NMessageProvider,
@@ -23,6 +23,7 @@ import {
 import { useRoute } from "vue-router";
 import EmptyLayout from "./layout/EmptyLayout.vue";
 import { computed } from "vue";
+import themeOverrides from "./assets/styles/theme/naive-ui-theme-overrides.json";
 
 const route = useRoute();
 const layout = computed(() => {

@@ -4,7 +4,7 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 
-import "./assets/main.css";
+import "./assets/styles/main.scss";
 
 import { create, NButton, NConfigProvider } from "naive-ui";
 
