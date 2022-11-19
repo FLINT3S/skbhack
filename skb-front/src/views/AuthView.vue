@@ -69,19 +69,4 @@
   text-align: center;
   color: var(--accent-blue);
 }
-
-.button-enter {
-  padding: 32px;
-  margin-top: 60px;
-}
-
-.sub-action-auth {
-  color: var(--accent-red);
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-    color: var(--accent-red-hover);
-  }
-}
 </style>

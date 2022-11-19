@@ -6,7 +6,7 @@
     <div class="currency-indicator__value d-flex align-items-center" :class="computedGrowth ? 'up' : 'down'">
       <span>{{ currencySymbol }}{{ value }}</span>
       <span class="material-icons-round">
-        arrow_drop_up
+        {{ computedGrowth ? 'arrow_drop_up' : 'arrow_drop_down' }}
       </span>
     </div>
   </div>
@@ -41,11 +41,14 @@ export default defineComponent({
     }
   },
   watch: {
-    value: function (newValue, oldValue) {
-      this.changed = true
-      setTimeout(() => {
-        this.changed = false
-      }, 800)
+    value: {
+      handler: function (newValue, oldValue) {
+        this.changed = true
+        setTimeout(() => {
+          this.changed = false
+        }, 800)
+      },
+      immediate: true
     }
   },
   computed: {

@@ -20,7 +20,7 @@
                 v-for="c in currencies"
                 :title="c.title"
                 :value="c.value"
-                :currency-symbol="c.currencySymbol"
+                :currency-symbol="c.symbol"
                 :growth="c.growth"
             />
           </div>
@@ -48,33 +48,12 @@
 <script setup lang="ts">
 import {NLayout} from "naive-ui";
 import CurrencyIndicator from "../components/CurrencyIndicator.vue";
+import {storeToRefs} from "pinia";
+import {useMoneyStore} from "../stores/money";
+import type {Currency} from "../data/Currency";
+import type {Ref} from "vue";
 
-const currencies = ref([
-  {
-    title: "USD",
-    value: 22.53,
-    currencySymbol: "$",
-    growth: true,
-  },
-  {
-    title: "EUR",
-    value: 26.53,
-    currencySymbol: "€",
-    growth: false,
-  },
-  {
-    title: "GBP",
-    value: 30.53,
-    currencySymbol: "£",
-    growth: true,
-  },
-  {
-    title: "CNY",
-    value: 3.53,
-    currencySymbol: "¥",
-    growth: false,
-  }
-])
+const {currencies}: { currencies: Ref<Currency[]> } = storeToRefs(useMoneyStore());
 </script>
 
 <style scoped lang="scss">
