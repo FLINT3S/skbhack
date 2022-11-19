@@ -7,10 +7,15 @@
     --accent-red: #DA5155;
     --accent-red-hover: #9d3234;
     --accent-blue: #213A8B;
+    --accent-blue-hover: #0f1f4b;
 }
 
 html, body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
+}
+
+.text-accent {
+    color: var(--accent-blue);
 }

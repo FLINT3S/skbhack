@@ -9,6 +9,9 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      meta: {
+        layout: MainLayout,
+      },
     },
     {
       path: "/about",
@@ -21,6 +24,7 @@ const router = createRouter({
     {
       path: "/auth",
       name: "auth",
+      redirect: "/auth/login",
       component: () => import("../views/AuthView.vue"),
       children: [
         {
@@ -32,6 +36,11 @@ const router = createRouter({
           path: "register",
           name: "register",
           component: () => import("../views/Auth/RegisterView.vue"),
+        },
+        {
+          path: "logout",
+          name: "logout",
+          component: () => import("../views/Auth/LogoutView.vue"),
         }
       ]
     }

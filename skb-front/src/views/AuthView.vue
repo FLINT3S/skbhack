@@ -4,7 +4,7 @@
       <transition name="slide-down" appear mode="in-out">
         <n-card class="auth-card" size="large">
           <div class="auth-card__inner">
-            <img src="../assets/img/login/skb-logo.png" alt="" class="auth-logo">
+            <img src="../assets/img/skb-logo.png" alt="" class="auth-logo">
 
             <router-view v-slot="{ Component }">
               <transition name="fade" mode="out-in">
