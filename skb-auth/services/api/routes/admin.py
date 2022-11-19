@@ -1,26 +1,26 @@
-from fastapi import APIRouter, Depends, Form
-from sqlmodel import Session, select, update
+from fastapi import APIRouter, Depends
+from sqlmodel import Session, select
 
 from starlette import status
-from starlette.responses import Response, JSONResponse
 
 from ...database.service import get_session
-from ...database.models import User, Role, Account, Currency
+from ...database.models import User, Role
 
 from .dtos import *
 
 admin_router = APIRouter()
 
 
-#  @admin_requiered
+#  @admin_required
 @admin_router.get("/not_verified_users")
 async def not_verified_users(
         session: Session = Depends(get_session)
 ):
+    print(session.exec(select(User).where(not User.verify)))
     return session.exec(select(User).where(not User.verify))
 
 
-#  @admin_requiered
+#  @admin_required
 @admin_router.get("/verified_users")
 async def verified_users(
         session: Session = Depends(get_session)
@@ -28,7 +28,7 @@ async def verified_users(
     return session.exec(select(User).where(User.verify))
 
 
-#  @admin_requiered
+#  @admin_required
 @admin_router.post("/verify_user")
 async def verify_user(
         login_dto: LoginDto,
@@ -42,7 +42,7 @@ async def verify_user(
     return status.HTTP_200_OK
 
 
-#  @admin_requiered
+#  @admin_required
 @admin_router.post("/block_user")
 async def block_user(
         login_dto: LoginDto,
@@ -56,7 +56,7 @@ async def block_user(
     return status.HTTP_200_OK
 
 
-#  @admin_requiered
+#  @admin_required
 @admin_router.post("/change_role")
 async def change_role(
         role_dto: RoleChangeDto,
