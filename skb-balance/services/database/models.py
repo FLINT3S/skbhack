@@ -76,6 +76,7 @@ class Account(SQLModel, table=True):
     @staticmethod
     def get_instance(user: User, currency: Currency):
         account = Account()
+        account.amount = 0
         account.user = user
         account.currency = currency
         return account

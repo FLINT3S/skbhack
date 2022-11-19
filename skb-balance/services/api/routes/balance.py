@@ -81,6 +81,8 @@ async def create_account(
     session.add(account)
     session.commit()
 
+    return Response(status_code=status.HTTP_200_OK)
+
 
 @balance_router.get("/accountHistory/{account_id}")
 async def get_account_history(
@@ -91,6 +93,11 @@ async def get_account_history(
     if account is None:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     response = {}
+    add_transactions_and_sort_by_date(account, response)
+    return JSONResponse(content=list(response.values()))
+
+
+def add_transactions_and_sort_by_date(account: Account, response):
     for transaction in account.transactions:
         if transaction.bought_at.date() not in response.keys():
             response[transaction.bought_at.date()] = {
@@ -108,7 +115,6 @@ async def get_account_history(
         })
     for day in response.keys():
         response[day]["transactions"].sort(key=lambda t: t["datetime"], reverse=True)
-    return JSONResponse(content=list(response.values()))
 
 
 @balance_router.get("/userHistory/{user_id}")
@@ -121,21 +127,5 @@ async def get_account_history(
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     response = {}
     for account in user.accounts:
-        for transaction in account.transactions:
-            if transaction.bought_at.date() not in response.keys():
-                response[transaction.bought_at.date()] = {
-                    "day": int(round(transaction.bought_at.timestamp())),
-                    "transactions": []
-                }
-            response[transaction.bought_at.date()]["transactions"].append({
-                "description": transaction.description,
-                "datetime": int(round(transaction.bought_at.timestamp())),
-                "amount": transaction.amount,
-                "currency": {
-                    "ticker": account.currency.ticker,
-                    "symbol": account.currency.symbol
-                },
-            })
-    for day in response.keys():
-        response[day]["transactions"].sort(key=lambda t: t["datetime"], reverse=True)
+        add_transactions_and_sort_by_date(account, response)
     return JSONResponse(content=list(response.values()))
