@@ -24,4 +24,8 @@ export class Currency {
   static fromJSON(json: any): Currency {
     return new Currency(json.id, json.title, json.symbol, json.value, json.growth, json.color || currenciesColors[json.title as keyof typeof currenciesColors])
   }
+
+  formatAmount(amount: number): string {
+    return amount.toLocaleString('ru-RU', {style: 'currency', currency: this.title})
+  }
 }

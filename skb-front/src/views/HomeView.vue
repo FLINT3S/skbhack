@@ -1,20 +1,38 @@
 <template>
   <main class="container mt-4">
     <div class="row">
-      <router-link class="col-12 col-lg-4 text-decoration-none" to="/profile" tag="div">
-        <n-card size="large">
-          <div class="d-flex justify-content-center flex-wrap">
-            <n-avatar circle :size="60"></n-avatar>
-            <div class="ms-4 my-auto">
-              <n-h2 class="fw-bold mb-1">Иван</n-h2>
-              <span class="mt-1 text-secondary">Перейти в профиль</span>
-            </div>
-            <div class="material-icons-round my-auto ms-auto goto-profile">
-              chevron_right
-            </div>
-          </div>
+      <div class="col-12 col-lg-4">
+        <router-link to="/profile" tag="div" class="text-decoration-none">
+          <n-card size="small">
+            <n-list hoverable>
+              <n-list-item>
+                <div class="d-flex justify-content-center flex-wrap">
+                  <n-avatar circle :size="60"></n-avatar>
+                  <div class="ms-4 my-auto">
+                    <n-h2 class="fw-bold mb-1">Иван</n-h2>
+                    <span class="mt-1 text-secondary">Перейти в профиль</span>
+                  </div>
+                  <div class="material-icons-round my-auto ms-auto goto-profile">
+                    chevron_right
+                  </div>
+                </div>
+              </n-list-item>
+            </n-list>
+          </n-card>
+        </router-link>
+
+        <n-card size="large" title="Ваши счета" class="mt-3 mt-lg-4">
+          <n-list clickable hoverable>
+            <n-list-item v-for="a in accounts" @click="$router.push('/account/' + a.id)">
+              <account-cell :account="a"/>
+            </n-list-item>
+          </n-list>
+          <n-button block size="large" type="info" quaternary class="mt-3">
+            <span class="material-icons-round">add</span>
+            <span>Добавить счёт</span>
+          </n-button>
         </n-card>
-      </router-link>
+      </div>
       <div class="col-12 col-lg-8 mt-3 mt-lg-0">
         <n-card title="Всего на счетах" size="large">
           <div class="row">
@@ -61,6 +79,7 @@ import {storeToRefs} from "pinia";
 import {useMoneyStore} from "../stores/money";
 import type {Account} from "../data/Account";
 import type {Ref} from "vue";
+import AccountCell from "@/components/AccountCell.vue";
 
 const {
   accounts,

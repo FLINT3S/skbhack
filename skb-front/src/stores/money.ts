@@ -36,6 +36,7 @@ const __mockData = {
   ],
   accounts: [
     {
+      id: "123",
       currency: {
         title: "USD",
         value: 22.53,
@@ -46,6 +47,7 @@ const __mockData = {
       amountUSD: 1000,
     },
     {
+      id: "123",
       currency: {
         title: "EUR",
         value: 26.53,
@@ -56,6 +58,7 @@ const __mockData = {
       amountUSD: 1100,
     },
     {
+      id: "123",
       currency: {
         title: "RUB",
         value: 0.3,
@@ -71,7 +74,7 @@ const __mockData = {
 export const useMoneyStore = defineStore('money', () => {
   const currencies = ref<Currency[]>(__mockData.currencies.map((currency, index) => new Currency(currency.id, currency.title, currency.currencySymbol, currency.value, currency.growth)))
 
-  const accounts = ref<Account[]>(__mockData.accounts.map(account => new Account(Currency.fromJSON(account.currency), account.amount, account.amountUSD)))
+  const accounts = ref<Account[]>(__mockData.accounts.map(account => new Account(account.id, Currency.fromJSON(account.currency), account.amount, account.amountUSD)))
 
   const totalUSD = computed(() => accounts.value.reduce((acc, account) => acc + account.amountUSD, 0))
 
