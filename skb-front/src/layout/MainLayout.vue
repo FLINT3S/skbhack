@@ -70,6 +70,12 @@
                   <span>Добавить счёт</span>
                 </n-button>
               </n-card>
+
+              <n-card class="mt-4">
+                <n-button type="primary" @click="$router.push('/admin')">
+                  Панель админиистратора
+                </n-button>
+              </n-card>
             </div>
             <div class="col-12 col-lg-8 mt-3 mt-lg-0">
               <slot></slot>
