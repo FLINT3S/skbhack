@@ -14,4 +14,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["uvicorn", "main:api.app", "--host", "0.0.0.0", "--port", "5000", "--reload"]
+CMD ["uvicorn", "main:api.app", "--host", "0.0.0.0", "--port", "5000"]
