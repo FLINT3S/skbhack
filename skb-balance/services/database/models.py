@@ -46,7 +46,6 @@ class Currency(SQLModel, table=True):
 
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     name: constr(min_length=1, max_length=64)
-    cost: int
     ticker: constr(min_length=1, max_length=8)
 
 
@@ -60,7 +59,7 @@ class Account(SQLModel, table=True):
     )
     value: int
     currency: Currency = Relationship(
-        back_populates="currencies",
+        back_populates="accounts",
         sa_relationship_kwargs={"lazy": "selectin"},
     )
 
