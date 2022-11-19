@@ -1,10 +1,7 @@
 from services.api.service import APIService
-from services.database.service import test
 import uvicorn
 
 api = APIService()
-
-test()
 
 
 @api.app.get("/")

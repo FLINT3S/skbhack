@@ -59,7 +59,10 @@ class Account(SQLModel, table=True):
         sa_relationship_kwargs={"lazy": "selectin"},
     )
     value: int
-    currency_id: UUID = Field(foreign_key=f"{Currency.__tablename__}.id")
+    currency: Currency = Relationship(
+        back_populates="currencies",
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
 
 
 class Transaction(SQLModel, table=True):
