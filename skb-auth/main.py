@@ -5,6 +5,7 @@ api = APIService()
 
 test()
 
+
 @api.app.get("/")
 async def root():
     return {"message": "Hello Bigger Applications!"}
