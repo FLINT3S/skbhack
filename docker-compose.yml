@@ -28,6 +28,7 @@ services:
       - "5000:5000"
     environment:
       - CONNECTION_STRING
+      - SECRET_KEY
     depends_on:
       - db
     healthcheck:
@@ -52,6 +53,7 @@ services:
       - "5001:5001"
     environment:
       - CONNECTION_STRING
+      - SECRET_KEY
     depends_on:
       - db
     healthcheck:
