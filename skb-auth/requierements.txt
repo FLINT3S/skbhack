@@ -3,3 +3,5 @@ uvicorn[standard]
 bcrypt
 sqlmodel
 psycopg2
+python-dotenv
+pycbrf
