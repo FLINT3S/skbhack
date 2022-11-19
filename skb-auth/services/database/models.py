@@ -24,6 +24,7 @@ class User(SQLModel, table=True):
     blocked: bool
     role: str = Field(foreign_key=f"{Role.__tablename__}.name")
     password: constr(min_length=60, max_length=60)
+    avatar_link: str
     accounts: List["Account"] = Relationship(
         back_populates="users",
         sa_relationship_kwargs={"lazy": "selectin"},
@@ -70,8 +71,10 @@ class Transaction(SQLModel, table=True):
         sa_relationship_kwargs={"lazy": "selectin"},
     )
     amount: float
+    rate: float
     currency: Currency = Relationship(
         back_populates="transactions",
         sa_relationship_kwargs={"lazy": "selectin"},
     )
     bought_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    description: constr(min_length=1, max_length=64)
