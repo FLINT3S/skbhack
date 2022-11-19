@@ -36,8 +36,6 @@ class User(SQLModel, table=True):
         sa_relationship_kwargs={"lazy": "selectin"},
     )
 
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
     @staticmethod
     def get_instance(login: str, firstname: str, surname: str, password: str):
         user = User()

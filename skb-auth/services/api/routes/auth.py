@@ -46,7 +46,8 @@ async def register(
     session.add(account)
     session.add(user)
     session.commit()
-    return jwt.encode(user, secret_key, algorithm="HS256")
+    user.id = str(user.id)
+    return jwt.encode(user.dict(), secret_key, algorithm="HS256")
 
 
 @auth_router.post("/login")
@@ -59,8 +60,9 @@ async def login(
     if user is None:
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
     # Create and return jwt token
+    user.id = str(user.id)
     if user.check_password(str(login_user_dto.password)):
-        return jwt.encode(user, secret_key, algorithm="HS256")
+        return jwt.encode(user.dict(), secret_key, algorithm="HS256")
     return status.HTTP_400_BAD_REQUEST
 
 
