@@ -1,20 +1,41 @@
 <template>
   <n-layout class="layout__main" native-scrollbar>
-    <n-layout-header class="layout__main__header" style="padding: 20px" bordered>
+    <n-layout-header
+        class="layout__main__header"
+        style="padding: 20px"
+        bordered
+    >
       <div class="container h-100">
         <div class="row h-100">
           <router-link class="col-8 col-md-5 col-lg-3 d-flex" to="/">
-            <img src="../assets/img/skb-logo.svg" class="m-auto w-100 header-logo" alt="">
+            <img
+                src="../assets/img/skb-logo.svg"
+                class="m-auto w-100 header-logo"
+                alt=""
+            />
           </router-link>
-          <div class="col-4 col-md-7 col-lg-3 ms-md-0 ms-lg-auto d-flex">
-            <router-link class="mt-auto mb-auto ms-auto material-icons-round logout" to="/auth/logout">
+          <div class="col-lg-8 d-none d-lg-flex justify-content-center">
+            <currency-indicator
+                class="mx-4"
+                v-for="c in currencies"
+                :title="c.title"
+                :value="c.value"
+                :currency-symbol="c.currencySymbol"
+                :growth="c.growth"
+            />
+          </div>
+          <div class="col ms-md-0 ms-lg-auto d-flex">
+            <router-link
+                class="mt-auto mb-auto ms-auto material-icons-round logout"
+                to="/auth/logout"
+            >
               logout
             </router-link>
           </div>
         </div>
       </div>
     </n-layout-header>
-    <n-layout position="absolute" class="layout__main__inner" style="top: 86px;">
+    <n-layout position="absolute" class="layout__main__inner" style="top: 86px">
       <n-layout>
         <div class="container pb-3">
           <slot></slot>
@@ -25,7 +46,36 @@
 </template>
 
 <script setup lang="ts">
-import {NLayout} from "naive-ui";</script>
+import {NLayout} from "naive-ui";
+import CurrencyIndicator from "../components/CurrencyIndicator.vue";
+
+const currencies = ref([
+  {
+    title: "USD",
+    value: 22.53,
+    currencySymbol: "$",
+    growth: true,
+  },
+  {
+    title: "EUR",
+    value: 26.53,
+    currencySymbol: "€",
+    growth: false,
+  },
+  {
+    title: "GBP",
+    value: 30.53,
+    currencySymbol: "£",
+    growth: true,
+  },
+  {
+    title: "CNY",
+    value: 3.53,
+    currencySymbol: "¥",
+    growth: false,
+  }
+])
+</script>
 
 <style scoped lang="scss">
 .layout__main {
@@ -66,7 +116,7 @@ import {NLayout} from "naive-ui";</script>
 
   &:hover {
     color: var(--accent-blue-hover);
-    text-shadow: 0 0 1px rgba(15, 31, 75, .7);
+    text-shadow: 0 0 1px rgba(15, 31, 75, 0.7);
   }
 }
 </style>
