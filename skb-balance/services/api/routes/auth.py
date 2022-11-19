@@ -7,6 +7,7 @@ auth_router = APIRouter()
 async def auth():
     return {"login": "processing 123"}
 
+
 @auth_router.get("/healthcheck")
 async def healthcheck():
     return {"healthcheck": "success"}
