@@ -13,6 +13,12 @@ class Role(SQLModel, table=True):
 
     name: constr(min_length=1, max_length=64) = Field(primary_key=True)
 
+    @staticmethod
+    def get_instance(name: str):
+        role = Role()
+        role.name = name
+        return role
+
 
 class User(SQLModel, table=True):
     __tablename__ = "users"

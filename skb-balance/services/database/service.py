@@ -1,13 +1,19 @@
 import os
 
-from sqlmodel import Session, SQLModel, create_engine
 from dotenv import load_dotenv
+from sqlmodel import Session, create_engine
 
+from .models import *
 
 load_dotenv()
 
 engine = create_engine(os.environ["CONNECTION_STRING"])
 SQLModel.metadata.create_all(engine)
+
+with Session(engine) as session:
+    session.merge(Role.get_instance("User"))
+    session.merge(Role.get_instance("Admin"))
+    session.commit()
 
 
 def init_db():
