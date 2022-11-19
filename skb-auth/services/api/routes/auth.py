@@ -1,15 +1,21 @@
-from fastapi import APIRouter, Depends, Form
+from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
 from starlette import status
-from starlette.responses import Response, JSONResponse
+from starlette.responses import Response
 
-from ...database.service import get_session
-from ...database.models import User, Role, Account, Currency
+from database.service import get_session
+from database.models import User, Account, Currency
 
 from .dtos import *
 
 auth_router = APIRouter()
+
+
+# For docker
+@auth_router.get("/healthcheck")
+async def healthcheck():
+    return {"status": "ok"}
 
 
 @auth_router.post("/register")

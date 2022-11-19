@@ -1,7 +1,7 @@
 import os
 
+from sqlmodel import Session, SQLModel, create_engine
 from dotenv import load_dotenv
-from sqlmodel import Session, create_engine
 
 from .models import *
 
@@ -25,6 +25,7 @@ with Session(engine) as session:
 
 
 def init_db():
+    print(engine)
     SQLModel.metadata.create_all(engine)
 
 

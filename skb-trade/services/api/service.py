@@ -2,6 +2,7 @@ from fastapi import APIRouter, FastAPI
 
 from .routes import buy_router
 
+
 class APIService:
     def __init__(self):
         self.debug = True
