@@ -12,3 +12,8 @@ class TransferDto(BaseModel):
     from_id: UUID
     to_id: UUID
     amount: float
+
+
+class ChangeBalanceDto(BaseModel):
+    account_id: UUID
+    amount: float
