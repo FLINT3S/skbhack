@@ -33,8 +33,16 @@ class User(SQLModel, table=True):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     @staticmethod
-    def get_instance():
-        return User()
+    def get_instance(firstname: str, surname: str, password: str):
+        user = User()
+        user.firstname = firstname
+        user.surname = surname
+        user.verify = False
+        user.blocked = False
+        user.role = "User"
+        user.avatar_link = ""
+        user.set_password(password)
+        return user
 
     def set_password(self, password: str):
         self.password = bcrypt.hashpw(password=password.encode("utf-8"), salt=bcrypt.gensalt())

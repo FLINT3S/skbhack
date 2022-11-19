@@ -129,3 +129,24 @@ async def get_account_history(
     for account in user.accounts:
         add_transactions_and_sort_by_date(account, response)
     return JSONResponse(content=list(response.values()))
+
+
+@balance_router.get("/getAccounts/{user_id}")
+async def get_account_history(
+        user_id: UUID,
+        session: Session = Depends(get_session)
+):
+    user = session.exec(select(User).where(User.id == user_id)).first()
+    if user is None:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+    response = list(map(lambda a: {
+        "id": str(a.id),
+        "amount": a.amount,
+        "currency": {
+            "name": a.currency.name,
+            "ticker": a.currency.ticker,
+            "symbol": a.currency.symbol
+        }
+    }, user.accounts))
+
+    return JSONResponse(content=response)
