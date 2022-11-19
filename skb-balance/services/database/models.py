@@ -67,6 +67,15 @@ class Currency(SQLModel, table=True):
     ticker: constr(min_length=1, max_length=8)
     symbol: constr(min_length=1, max_length=1)
 
+    @staticmethod
+    def get_instance(id: UUID, name: str, ticker: str, symbol: str):
+        currency = Currency()
+        currency.id = id
+        currency.name = name
+        currency.ticker = ticker
+        currency.symbol = symbol
+        return currency
+
 
 class Account(SQLModel, table=True):
     __tablename__ = "accounts"
