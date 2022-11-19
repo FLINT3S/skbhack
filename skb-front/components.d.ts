@@ -9,6 +9,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AccountCell: typeof import('./src/components/AccountCell.vue')['default']
     BalanceChart: typeof import('./src/components/BalanceChart.vue')['default']
+    ColorBalance: typeof import('./src/components/ColorBalance.vue')['default']
     CurrencyIndicator: typeof import('./src/components/CurrencyIndicator.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NButton: typeof import('naive-ui')['NButton']

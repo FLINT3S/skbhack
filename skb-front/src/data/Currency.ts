@@ -6,26 +6,26 @@ export const currenciesColors = {
 
 export class Currency {
   id: number
-  title: string
+  ticker: string
   symbol: string
-  value: number
+  value?: number
   growth?: boolean
   color?: string
 
-  constructor(id: number, title: string, symbol: string, value: number, growth?: boolean, color?: string) {
+  constructor(id: number, ticker: string, symbol: string, value?: number, growth?: boolean, color?: string) {
     this.id = id
-    this.title = title
+    this.ticker = ticker
     this.symbol = symbol
     this.value = value
     this.growth = growth
-    this.color = color || currenciesColors[this.title as keyof typeof currenciesColors]
+    this.color = color || currenciesColors[this.ticker as keyof typeof currenciesColors]
   }
 
   static fromJSON(json: any): Currency {
-    return new Currency(json.id, json.title, json.symbol, json.value, json.growth, json.color || currenciesColors[json.title as keyof typeof currenciesColors])
+    return new Currency(json.id, json.ticker, json.symbol, json.value, json.growth, json.color || currenciesColors[json.ticker as keyof typeof currenciesColors])
   }
 
   formatAmount(amount: number): string {
-    return amount.toLocaleString('ru-RU', {style: 'currency', currency: this.title})
+    return amount.toLocaleString('ru-RU', {style: 'currency', currency: this.ticker})
   }
 }

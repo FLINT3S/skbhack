@@ -18,8 +18,8 @@
             <currency-indicator
                 class="mx-4"
                 v-for="c in currencies"
-                :title="c.title"
-                :value="c.value"
+                :title="c.ticker"
+                :value="c.value || 0"
                 :currency-symbol="c.symbol"
                 :growth="c.growth"
             />

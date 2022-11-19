@@ -68,6 +68,44 @@
             </div>
           </div>
         </n-card>
+
+        <n-card class="mt-4" size="large">
+          <template #header>
+            <div class="d-flex align-items-center">
+              <span class="material-icons-round me-2">
+                history
+              </span>
+
+              <span class="m-0">Недавняя активность</span>
+            </div>
+          </template>
+
+          <n-list>
+            <n-h2>18 ноября</n-h2>
+
+            <n-list-item v-for="t in transactions">
+              <div class="d-flex justify-content-between">
+                <div class="text-start">
+                  <n-h3 class="fw-bold">
+                    {{ t.description }}
+                  </n-h3>
+
+                  <div>
+                    {{ t.caption }}
+                  </div>
+                </div>
+
+                <div class="d-flex flex-column text-end">
+                  <color-balance :transaction-item="t"/>
+
+                  <span class="mt-3 text-secondary">
+                    {{ t.time }}
+                  </span>
+                </div>
+              </div>
+            </n-list-item>
+          </n-list>
+        </n-card>
       </div>
     </div>
 
@@ -85,7 +123,7 @@
           <n-h4 class="fw-bold">Выберете валюту для нового счёта</n-h4>
 
           <n-select v-model:value="newSelectedCurrency"
-                    :options="currencies.map(c => ({value: c.id, label: c.title}))"></n-select>
+                    :options="currencies.map(c => ({value: c.id, label: c.ticker}))"></n-select>
 
           <n-button block class="button-enter" round size="large" type="primary" @click="onClickSubmitCreateAccount">
             Создать счёт
@@ -102,21 +140,25 @@ import type {Ref} from "vue";
 
 import BalanceChart from "../components/BalanceChart.vue";
 import AccountCell from "../components/AccountCell.vue";
+import ColorBalance from "../components/ColorBalance.vue";
 
 import {useMoneyStore} from "../stores/money";
 import type {Account} from "../data/Account";
 import type {Currency} from "../data/Currency";
+import type {Transaction} from "../data/Transaction";
 
 const {
   accounts,
   totalUSD,
   groupedAccounts,
-  currencies
+  currencies,
+  transactions
 } = storeToRefs(useMoneyStore()) as {
   accounts: Ref<Account[]>,
   totalUSD: Ref<number>,
   groupedAccounts: Ref<Map<string, Account[]>>,
-  currencies: Ref<Currency[]>
+  currencies: Ref<Currency[]>,
+  transactions: Ref<Transaction[]>
 };
 
 const chartData = ref({

@@ -18,6 +18,6 @@ export class Account {
   }
 
   get title(): string {
-    return "Счёт в " + this.currency.title
+    return "Счёт в " + this.currency.ticker
   }
 }
