@@ -58,6 +58,20 @@ async def block_user(
 
 
 #  @admin_required
+@admin_router.post("/unblock_user")
+async def unblock_user(
+        login_dto: LoginDto,
+        session: Session = Depends(get_session)
+):
+    user = session.exec(select(User).where(User.login == login_dto.login)).first()
+    user.blocked = False
+
+    session.add(user)
+    session.commit()
+    return status.HTTP_200_OK
+
+
+#  @admin_required
 @admin_router.post("/change_role")
 async def change_role(
         role_dto: RoleChangeDto,
