@@ -47,7 +47,6 @@ class User(SQLModel, table=True):
         user.verify = False
         user.blocked = False
         user.role = "User"
-        user.avatar_link = ""
         user.set_password(password)
         return user
 
