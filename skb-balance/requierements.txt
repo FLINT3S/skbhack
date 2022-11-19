@@ -3,4 +3,6 @@ python-multipart
 uvicorn[standard]
 sqlmodel
 psycopg2
-dotenv
+python-dotenv
+pycbrf
+bcrypt

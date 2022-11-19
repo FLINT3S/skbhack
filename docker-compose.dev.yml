@@ -25,6 +25,20 @@ services:
     volumes:
       - ./skb-auth:/app
 
+  balance:
+    build: skb-balance/.
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+    depends_on:
+      - db
+    networks:
+      - postgres
+    volumes:
+      - ./skb-balance:/app
+
   db:
     image: postgres:13.2
     healthcheck:
