@@ -26,11 +26,11 @@ class User(SQLModel, table=True):
     id: UUID = Field(primary_key=True, default_factory=uuid4)
     firstname: constr(min_length=1, max_length=64)
     surname: constr(min_length=1, max_length=64)
-    login: constr(min_length=1, max_length=64)
     verify: bool
     blocked: bool
     role: str = Field(foreign_key=f"{Role.__tablename__}.name")
     password: constr(min_length=60, max_length=60)
+    avatar_link: str
     accounts: List["Account"] = Relationship(
         back_populates="user",
         sa_relationship_kwargs={"lazy": "selectin"},
@@ -39,9 +39,8 @@ class User(SQLModel, table=True):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     @staticmethod
-    def get_instance(login: str, firstname: str, surname: str, password: str):
+    def get_instance(firstname: str, surname: str, password: str):
         user = User()
-        user.login = login
         user.firstname = firstname
         user.surname = surname
         user.verify = False
