@@ -6,8 +6,8 @@ from pycbrf import ExchangeRates
 from starlette import status
 from starlette.responses import Response
 
-from database.models import *
-from database.service import get_session
+from ...database.models import *
+from ...database.service import get_session
 from .dtos import *
 
 buy_router = APIRouter()
