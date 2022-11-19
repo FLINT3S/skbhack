@@ -18,6 +18,7 @@ class User(SQLModel, table=True):
     __tablename__ = "users"
 
     id: UUID = Field(primary_key=True, default_factory=uuid4)
+    login: constr(min_length=1, max_length=64)
     firstname: constr(min_length=1, max_length=64)
     surname: constr(min_length=1, max_length=64)
     verify: bool
@@ -33,8 +34,9 @@ class User(SQLModel, table=True):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     @staticmethod
-    def get_instance(firstname: str, surname: str, password: str):
+    def get_instance(login: str, firstname: str, surname: str, password: str):
         user = User()
+        user.login = login
         user.firstname = firstname
         user.surname = surname
         user.verify = False

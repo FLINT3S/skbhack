@@ -1,10 +1,13 @@
 from fastapi import APIRouter, Depends, Form
 from sqlmodel import Session, select
 
+from starlette import status
+from starlette.responses import Response, JSONResponse
+
 from ...database.service import get_session
 from ...database.models import User, Role, Account, Currency
 
-from .dtos import CreateUserDto
+from .dtos import *
 
 auth_router = APIRouter()
 
@@ -15,6 +18,7 @@ async def register(
         session: Session = Depends(get_session)
 ):
     user = User.get_instance(
+        login=create_user_dto.login,
         firstname=create_user_dto.firstname,
         surname=create_user_dto.surname,
         password=create_user_dto.password
@@ -27,3 +31,16 @@ async def register(
     session.add(user)
     session.commit()
     return user
+
+
+@auth_router.post("/login")
+async def login(
+        login_user_dto: LoginUserDto,
+        session: Session = Depends(get_session)
+):
+    user_login = login_user_dto.login
+    user = session.exec(select(User).where(User.login == user_login)).first()
+    if user is None:
+        return Response(status_code=status.HTTP_400_BAD_REQUEST)
+
+    return user.check_password(login_user_dto.password)
