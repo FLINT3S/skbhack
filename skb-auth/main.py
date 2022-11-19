@@ -1,5 +1,5 @@
 from services.api.service import APIService
-from database.service import init_db
+from services.database.service import init_db
 import uvicorn
 
 api = APIService()
