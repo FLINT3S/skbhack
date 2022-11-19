@@ -8,7 +8,7 @@ from pycbrf import ExchangeRates
 
 from ...database.service import get_session
 from ...database.models import *
-from dtos import *
+from .dtos import *
 
 balance_router = APIRouter()
 
