@@ -3,8 +3,8 @@ from sqlmodel import Session, select
 from starlette import status
 from starlette.responses import Response, JSONResponse
 
-from database.service import get_session
-from database.models import *
+from ...database.service import get_session
+from ...database.models import *
 from .dtos import *
 
 balance_router = APIRouter()
