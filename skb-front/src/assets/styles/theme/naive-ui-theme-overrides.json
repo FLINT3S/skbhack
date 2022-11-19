@@ -28,7 +28,7 @@
     "fontFamily": "'Manrope', sans-serif"
   },
   "Card": {
-    "borderRadius": "10px",
+    "borderRadius": "25px",
     "borderColor": "rgb(239, 239, 245)"
   },
   "Typography": {

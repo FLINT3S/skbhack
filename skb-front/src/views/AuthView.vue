@@ -4,11 +4,11 @@
       <transition name="slide-down" appear mode="in-out">
         <n-card class="auth-card" size="large">
           <div class="auth-card__inner">
-            <img src="../assets/img/skb-logo.png" alt="" class="auth-logo">
+            <img src="../assets/img/skb-logo.png" alt="" class="auth-logo" />
 
             <router-view v-slot="{ Component }">
               <transition name="fade" mode="out-in">
-                <component :is="Component"/>
+                <component :is="Component" />
               </transition>
             </router-view>
           </div>
@@ -18,9 +18,7 @@
   </main>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="scss">
 .authentication-view {
@@ -70,20 +68,5 @@
   display: block;
   text-align: center;
   color: var(--accent-blue);
-}
-
-.button-enter {
-  padding: 32px;
-  margin-top: 60px;
-}
-
-.sub-action-auth {
-  color: var(--accent-red);
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-    color: var(--accent-red-hover);
-  }
 }
 </style>
