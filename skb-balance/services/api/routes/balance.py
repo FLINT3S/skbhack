@@ -83,3 +83,19 @@ async def get_account_history(user_id: UUID, session: Session = Depends(get_sess
     }, user.accounts))
 
     return JSONResponse(content=response)
+
+
+@balance_router.post("/changeBalance")
+async def change_account_balance(change_balance_dto: ChangeBalanceDto, session: Session = Depends(get_session)):
+    account = session.exec(select(Account).where(Account.id == change_balance_dto.account_id)).first()
+    if account is None:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+    transaction = Transaction.get_instance(account, change_balance_dto.amount)
+    transaction.rate = 1
+    transaction.description = f"Изменение баланса администратором"
+
+    session.add(transaction)
+    session.commit()
+
+    return Response(status_code=status.HTTP_200_OK)
