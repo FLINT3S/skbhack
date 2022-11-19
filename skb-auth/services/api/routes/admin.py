@@ -16,8 +16,8 @@ admin_router = APIRouter()
 async def not_verified_users(
         session: Session = Depends(get_session)
 ):
-    print(session.exec(select(User).where(not User.verify)))
-    return session.exec(select(User).where(not User.verify))
+    print(session.exec(select(User).where(User.verify == False)).all())
+    return session.exec(select(User).where(User.verify == False)).all()
 
 
 #  @admin_required
@@ -25,6 +25,7 @@ async def not_verified_users(
 async def verified_users(
         session: Session = Depends(get_session)
 ):
+    print(session.exec(select(User).where(not User.verify)).first())
     return session.exec(select(User).where(User.verify))
 
 
