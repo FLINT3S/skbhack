@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory} from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import MainLayout from "../layout/MainLayout.vue";
 
@@ -41,9 +41,9 @@ const router = createRouter({
           path: "logout",
           name: "logout",
           component: () => import("../views/Auth/LogoutView.vue"),
-        }
-      ]
-    }
+        },
+      ],
+    },
   ],
 });
 

@@ -1,33 +1,142 @@
 <template>
   <n-layout class="layout__main" native-scrollbar>
-    <n-layout-header class="layout__main__header" style="padding: 20px" bordered>
+    <n-layout-header
+        bordered
+        class="layout__main__header"
+        style="padding: 20px"
+    >
       <div class="container h-100">
         <div class="row h-100">
           <router-link class="col-8 col-md-5 col-lg-3 d-flex" to="/">
-            <img src="../assets/img/skb-logo.svg" class="m-auto w-100 header-logo" alt="">
+            <img
+                alt=""
+                class="m-auto w-100 header-logo"
+                src="../assets/img/skb-logo.svg"
+            />
           </router-link>
-          <div class="col-4 col-md-7 col-lg-3 ms-md-0 ms-lg-auto d-flex">
-            <router-link class="mt-auto mb-auto ms-auto material-icons-round logout" to="/auth/logout">
+          <div class="col-lg-8 d-none d-lg-flex justify-content-center">
+            <currency-indicator
+                v-for="c in currencies"
+                :currency-symbol="c.symbol"
+                :growth="c.growth"
+                :title="c.ticker"
+                :value="c.value || 0"
+                class="mx-4"
+            />
+          </div>
+          <div class="col ms-md-0 ms-lg-auto d-flex">
+            <router-link
+                class="mt-auto mb-auto ms-auto material-icons-round logout"
+                to="/auth/logout"
+            >
               logout
             </router-link>
           </div>
         </div>
       </div>
     </n-layout-header>
-    <n-layout position="absolute" class="layout__main__inner" style="top: 86px;">
+    <n-layout class="layout__main__inner" position="absolute" style="top: 86px">
       <n-layout>
         <div class="container pb-3">
-          <slot></slot>
+          <div class="row mt-4">
+            <div class="col-12 col-lg-4">
+              <router-link class="text-decoration-none" tag="div" to="/profile">
+                <n-card size="small">
+                  <n-list hoverable>
+                    <n-list-item>
+                      <div class="d-flex justify-content-center flex-wrap">
+                        <n-avatar :size="60" circle></n-avatar>
+                        <div class="ms-4 my-auto">
+                          <n-h2 class="fw-bold mb-1">Иван</n-h2>
+                          <span class="mt-1 text-secondary">Перейти в профиль</span>
+                        </div>
+                        <div class="material-icons-round my-auto ms-auto goto-profile">
+                          chevron_right
+                        </div>
+                      </div>
+                    </n-list-item>
+                  </n-list>
+                </n-card>
+              </router-link>
+
+              <n-card class="mt-3 mt-lg-4" size="large" title="Ваши счета">
+                <n-list clickable hoverable>
+                  <n-list-item v-for="a in accounts" @click="$router.push('/account/' + a.id)">
+                    <account-cell :account="a"/>
+                  </n-list-item>
+                </n-list>
+                <n-button block class="mt-3" quaternary size="large" type="info" @click="showCreateAccountModal = true">
+                  <span class="material-icons-round">add</span>
+                  <span>Добавить счёт</span>
+                </n-button>
+              </n-card>
+            </div>
+            <div class="col-12 col-lg-8 mt-3 mt-lg-0">
+              <slot></slot>
+            </div>
+          </div>
         </div>
       </n-layout>
     </n-layout>
+
+    <n-modal :show="showCreateAccountModal" mask-closable @close="showCreateAccountModal = false">
+      <n-card class="modal-medium" title="Создание нового счёта">
+        <template #header-extra>
+          <div class="modal-close p-1 cursor-pointer" @click="showCreateAccountModal = false">
+            <span class="material-icons-round text-white">
+              close
+            </span>
+          </div>
+        </template>
+
+        <div class="text-center w-75 mx-auto">
+          <n-h4 class="fw-bold">Выберете валюту для нового счёта</n-h4>
+
+          <n-select v-model:value="newSelectedCurrency"
+                    :options="currencies.map(c => ({value: c.id, label: c.ticker}))"></n-select>
+
+          <n-button block class="button-enter" round size="large" type="primary" @click="onClickSubmitCreateAccount">
+            Создать счёт
+          </n-button>
+        </div>
+      </n-card>
+    </n-modal>
   </n-layout>
 </template>
 
-<script setup lang="ts">
-import {NLayout} from "naive-ui";</script>
+<script lang="ts" setup>
+import {NLayout} from "naive-ui";
+import CurrencyIndicator from "../components/CurrencyIndicator.vue";
 
-<style scoped lang="scss">
+import {storeToRefs} from "pinia";
+import type {Ref} from "vue";
+
+import type {Account} from "../data/Account";
+import {useMoneyStore} from "../stores/money";
+import type {Currency} from "../data/Currency";
+
+
+const {
+  accounts,
+  totalUSD,
+  groupedAccounts,
+  currencies
+} = storeToRefs(useMoneyStore()) as {
+  accounts: Ref<Account[]>,
+  totalUSD: Ref<number>,
+  groupedAccounts: Ref<Map<string, Account[]>>,
+  currencies: Ref<Currency[]>,
+};
+
+const newSelectedCurrency = ref(null)
+const showCreateAccountModal = ref(false)
+
+const onClickSubmitCreateAccount = () => {
+  console.log(newSelectedCurrency.value)
+}
+</script>
+
+<style lang="scss" scoped>
 .layout__main {
   min-height: 100vh;
 }
@@ -66,7 +175,7 @@ import {NLayout} from "naive-ui";</script>
 
   &:hover {
     color: var(--accent-blue-hover);
-    text-shadow: 0 0 1px rgba(15, 31, 75, .7);
+    text-shadow: 0 0 1px rgba(15, 31, 75, 0.7);
   }
 }
 </style>

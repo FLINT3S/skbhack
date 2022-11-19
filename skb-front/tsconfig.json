@@ -1,5 +1,8 @@
 {
   "files": [],
+  "compilerOptions": {
+    "lib": ["ES2019"]
+  },
   "references": [
     {
       "path": "./tsconfig.config.json"
