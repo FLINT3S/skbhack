@@ -1,6 +1,6 @@
 <template>
   <section>
-    <span class="auth-screen-header">Логин</span>
+    <span class="auth-screen-header">Регистрация</span>
 
     <n-space vertical class="mt-5">
       <n-input
