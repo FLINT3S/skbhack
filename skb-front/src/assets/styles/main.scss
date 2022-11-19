@@ -4,33 +4,47 @@
 @import "common/bootstrap-grid.min.css";
 
 :root {
-    --accent-red: #DA5155;
-    --accent-red-hover: #9d3234;
-    --accent-blue: #213A8B;
-    --accent-blue-hover: #0f1f4b;
+  --accent-red: #DA5155;
+  --accent-red-hover: #9d3234;
+  --accent-blue: #213A8B;
+  --accent-blue-hover: #0f1f4b;
 }
 
 html, body {
-    font-family: 'Manrope', sans-serif;
-    margin: 0;
-    padding: 0;
+  font-family: 'Manrope', sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 .text-accent {
-    color: var(--accent-blue);
+  color: var(--accent-blue);
 }
 
 .button-enter {
-    padding: 32px;
-    margin-top: 60px;
+  padding: 32px;
+  margin-top: 60px;
 }
 
 .sub-action-auth {
-    color: var(--accent-red);
-    text-decoration: none;
+  color: var(--accent-red);
+  text-decoration: none;
 
-    &:hover {
-        text-decoration: underline;
-        color: var(--accent-red-hover);
-    }
+  &:hover {
+    text-decoration: underline;
+    color: var(--accent-red-hover);
+  }
+}
+
+.modal-medium {
+  max-width: 600px;
+}
+
+.modal-close {
+  background: #b2b2b2;
+  border-radius: 100px;
+  font-size: 12px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
