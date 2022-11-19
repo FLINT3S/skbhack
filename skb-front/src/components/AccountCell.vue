@@ -1,7 +1,12 @@
 <template>
   <div class="account-cell d-flex">
-    <div class="icon me-3"
-         :style="{background: account.currency.color, borderColor: blendRGB(account.currency.color, -40), color: blendRGB(account.currency.color, -100)}">
+    <div :style="{
+      background: account.currency.color,
+      borderColor: blendRGB(account.currency.color, -40),
+      color: blendRGB(account.currency.color, -100)
+    }"
+         class="icon me-3"
+    >
       {{ account.currency.symbol }}
     </div>
     <div class="info d-flex flex-column">
@@ -11,7 +16,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import type {Account} from "../data/Account";
 import {blendRGB} from "../utils/colors";
 

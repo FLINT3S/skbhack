@@ -16,4 +16,8 @@ export class Account {
   get formatAmount(): string {
     return this.currency.formatAmount(this.amount)
   }
+
+  get title(): string {
+    return "Счёт в " + this.currency.title
+  }
 }

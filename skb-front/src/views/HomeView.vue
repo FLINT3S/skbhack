@@ -84,9 +84,10 @@
         <div class="text-center w-75 mx-auto">
           <n-h4 class="fw-bold">Выберете валюту для нового счёта</n-h4>
 
-          <n-select v-model:value="newSelectedCurrency" :options="currencies.map(c => ({value: c.id, label: c.title}))"></n-select>
+          <n-select v-model:value="newSelectedCurrency"
+                    :options="currencies.map(c => ({value: c.id, label: c.title}))"></n-select>
 
-          <n-button size="large" class="button-enter" type="primary" round block @click="onClickSubmitCreateAccount">
+          <n-button block class="button-enter" round size="large" type="primary" @click="onClickSubmitCreateAccount">
             Создать счёт
           </n-button>
         </div>
@@ -100,7 +101,7 @@ import {storeToRefs} from "pinia";
 import type {Ref} from "vue";
 
 import BalanceChart from "../components/BalanceChart.vue";
-import AccountCell from "@/components/AccountCell.vue";
+import AccountCell from "../components/AccountCell.vue";
 
 import {useMoneyStore} from "../stores/money";
 import type {Account} from "../data/Account";

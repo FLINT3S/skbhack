@@ -3,6 +3,8 @@ export function blendColor(c: number[], n: number, i: number, d: number) {
   return c
 }
 
-export function blendRGB(rgb: string, n: number) {
+export function blendRGB(rgb: string | undefined, n: number) {
+  if (!rgb) return rgb
+ 
   return 'rgb(' + blendColor(rgb.match(/\d+/g)!.map(Number), n, 0, 0) + ')'
 }
