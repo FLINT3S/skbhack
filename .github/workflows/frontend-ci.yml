@@ -1,18 +1,19 @@
-name: Build and push frontend to docker hub registry
+name: Frontend CI
 
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'skb-front/**'
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      -
-        name: Login to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_LOGIN }}
@@ -24,3 +25,10 @@ jobs:
           context: ./skb-front/
           push: true
           tags: siailyadev/skb-front:latest
+
+      - name: Invoke deployment Portainer hook
+        uses: distributhor/workflow-webhook@v2
+        env:
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
+          data: '{ "deploy": "true" }'

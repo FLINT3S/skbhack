@@ -1,0 +1,42 @@
+{
+  "common": {
+    "primaryColor": "#DA5155FF",
+    "primaryColorHover": "#BC4347FF",
+    "primaryColorPressed": "#BF4649FF",
+    "primaryColorSuppl": "#DA5155FF",
+    "borderRadius": "8px",
+    "baseColor": "#E1E1E1FF",
+    "bodyColor": "#EAEBEEFF",
+    "fontSizeMedium": "16px",
+    "fontSizeHuge": "20px",
+    "lineHeight": "1",
+    "successColor": "#28C638FF",
+    "successColorHover": "#2DE440FF",
+    "successColorPressed": "#10991EFF",
+    "successColorSuppl": "#1D9C2AFF",
+    "warningColor": "#D1C12CFF",
+    "warningColorHover": "#F7E651FF",
+    "warningColorPressed": "#968A1AFF",
+    "warningColorSuppl": "rgba(160, 148, 31, 1)",
+    "errorColor": "#E43E3EFF",
+    "errorColorHover": "#FC6060FF",
+    "errorColorPressed": "#A91919FF",
+    "errorColorSuppl": "#8E0909FF",
+    "fontSizeLarge": "18px",
+    "fontSize": "16px",
+    "fontSizeMini": "14px",
+    "fontFamily": "'Manrope', sans-serif"
+  },
+  "Card": {
+    "borderRadius": "10px",
+    "borderColor": "rgb(239, 239, 245)"
+  },
+  "Typography": {
+    "headerFontWeight": "300"
+  },
+  "Button": {
+    "paddingMedium": "0 20px",
+    "paddingLarge": "0 28px",
+    "paddingRoundLarge": "0 32px"
+  }
+}
