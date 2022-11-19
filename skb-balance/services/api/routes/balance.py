@@ -62,6 +62,24 @@ def _get_currency_cost(from_ticker: str, to_ticker: str) -> float:
     return get_cost(to_ticker) / get_cost(from_ticker)
 
 
+@balance_router.post("/replenishment")
+async def replenishment(change_balance_dto: ChangeBalanceDto, session: Session = Depends(get_session)):
+    account = session.exec(select(Account).where(Account.id == change_balance_dto.account_id)).first()
+    if account is None:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+    transaction = Transaction.get_instance(account, change_balance_dto.amount)
+    transaction.rate = 1
+    transaction.description = "Пополнение с банковского счёта" if change_balance_dto.amount > 0 \
+        else f"Вывод средств на банковский счёт"
+
+    session.add(transaction)
+    session.commit()
+
+    return Response(status_code=status.HTTP_200_OK)
+
+
+
 @balance_router.post("/createAccount")
 async def create_account(create_account_dto: CreateAccountDto, session: Session = Depends(get_session)):
     user = session.exec(select(User).where(User.id == create_account_dto.user_id)).first()
