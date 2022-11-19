@@ -3,30 +3,33 @@
     <span class="auth-screen-header">Регистрация</span>
 
     <n-space vertical class="mt-5">
+      <n-input placeholder="Логин" v-model:value="registerData.email" />
       <n-input
-          placeholder="Логин"
-          v-model:value="registerData.email"
+        v-model:value="registerData.password"
+        placeholder="Пароль"
+        type="password"
       />
       <n-input
-          v-model:value="registerData.password"
-          placeholder="Пароль"
-          type="password"
-      />
-      <n-input
-          v-model:value="registerData.passwordConfirmation"
-          placeholder="Ещё раз пароль"
-          type="password"
+        v-model:value="registerData.passwordConfirmation"
+        placeholder="Ещё раз пароль"
+        type="password"
       />
     </n-space>
 
     <n-button
-        block
-        type="primary"
-        round
-        size="large"
-        class="button-enter"
-        :disabled="!(registerData.email && registerData.password && registerData.passwordConfirmation)"
-        @click="onClickSubmitRegister"
+      block
+      type="primary"
+      round
+      size="large"
+      class="button-enter"
+      :disabled="
+        !(
+          registerData.email &&
+          registerData.password &&
+          registerData.passwordConfirmation
+        )
+      "
+      @click="onClickSubmitRegister"
     >
       Зарегистрироваться
     </n-button>
@@ -38,17 +41,15 @@
 </template>
 
 <script setup lang="ts">
-import {storeToRefs} from "pinia";
-import {useAuthStore} from "../../stores/auth";
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "../../stores/auth";
 
-const {registerData} = storeToRefs(useAuthStore());
-const {submitRegister} = useAuthStore();
+const { registerData } = storeToRefs(useAuthStore());
+const { submitRegister } = useAuthStore();
 
 const onClickSubmitRegister = () => {
-  submitRegister()
-}
+  submitRegister();
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

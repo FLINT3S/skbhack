@@ -3,15 +3,13 @@
 </template>
 
 <script setup lang="ts">
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
-console.log("Logout")
+console.log("Logout");
 
-const router = useRouter()
+const router = useRouter();
 
-router.replace("/auth/login")
+router.replace("/auth/login");
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
