@@ -13,7 +13,12 @@ balance_router = APIRouter()
 
 
 @balance_router.post("/transfer")
-async def transfer_currency(from_id: UUID = Form(), to_id: UUID = Form(), amount: float = Form(), session: Session = Depends(get_session)):
+async def transfer_currency(
+        from_id: UUID = Form(),
+        to_id: UUID = Form(),
+        amount: float = Form(),
+        session: Session = Depends(get_session)
+):
     from_account = session.exec(
         select(Account).where(Account.id == from_id)
     ).first()
@@ -21,29 +26,33 @@ async def transfer_currency(from_id: UUID = Form(), to_id: UUID = Form(), amount
         select(Account).where(Account.id == to_id)
     ).first()
 
-    session.add_all(_create_transactions_and_change_account_amount(from_account, to_account, amount))
-    session.add_all([from_account, to_account])
+    transactions = _create_transactions(from_account, to_account, amount)
+
+    from_account.amount -= amount
+    to_account.amount += amount * transactions[1].rate
+
+    session.add_all(transactions)
+    session.add(from_account)
+    session.add(to_account)
     session.commit()
 
     return Response(status_code=status.HTTP_200_OK)
 
 
-def _create_transactions_and_change_account_amount(
+def _create_transactions(
         from_account: Account,
         to_account: Account,
         amount: float
 ) -> Tuple[Transaction, Transaction]:
     currency_cost = _get_currency_cost(from_account.currency.ticker, to_account.currency.ticker)
 
-    from_account_transaction = _get_transaction(from_account, -amount)
+    from_account_transaction = Transaction.get_instance(from_account, -amount)
     from_account_transaction.rate = currency_cost
     from_account_transaction.description = f"Перевод из {from_account.currency.ticker} в {to_account.currency.ticker}"
-    from_account.amount -= amount
 
-    to_account_transaction = _get_transaction(to_account, amount * float(currency_cost) ** -1)
+    to_account_transaction = Transaction.get_instance(to_account, amount * float(currency_cost) ** -1)
     to_account_transaction.rate = float(currency_cost) ** -1
     to_account_transaction.description = f"Перевод из {from_account.currency.ticker} в {to_account.currency.ticker}"
-    to_account.amount += amount * to_account_transaction.rate
 
     return from_account_transaction, to_account_transaction
 
@@ -57,11 +66,21 @@ def _get_currency_cost(from_ticker: str, to_ticker: str) -> float:
     return get_cost(to_ticker) / get_cost(from_ticker)
 
 
-def _get_transaction(account: Account, amount: float):
-    transaction = Transaction()
-    transaction.currency = account.currency
-    transaction.account = account
-    transaction.bought_at = datetime.now()
-    transaction.amount = amount
+@balance_router.post("/createAccount")
+async def create_account(
+        user_id: UUID = Form(),
+        currency_id: UUID = Form(),
+        session: Session = Depends(get_session)
+):
+    user = session.exec(
+        select(User).where(User.id == user_id)
+    ).first()
+    currency = session.exec(
+        select(Currency).where(Currency.id == currency_id)
+    ).first()
 
-    return transaction
+    account = Account.get_instance(user, currency)
+    session.add(account)
+    session.commit()
+
+    pass

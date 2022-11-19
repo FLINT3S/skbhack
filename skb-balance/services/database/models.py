@@ -32,6 +32,10 @@ class User(SQLModel, table=True):
 
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+    @staticmethod
+    def get_instance():
+        return User()
+
     def set_password(self, password: str):
         self.password = bcrypt.hashpw(password=password.encode("utf-8"), salt=bcrypt.gensalt())
 
@@ -68,6 +72,13 @@ class Account(SQLModel, table=True):
         sa_relationship_kwargs={"lazy": "selectin"},
     )
 
+    @staticmethod
+    def get_instance(user: User, currency: Currency):
+        account = Account()
+        account.user = user
+        account.currency = currency
+        return account
+
 
 class Transaction(SQLModel, table=True):
     __tablename__ = "transactions"
@@ -86,3 +97,12 @@ class Transaction(SQLModel, table=True):
     currency_id: UUID = Field(default=None, foreign_key="currencies.id")
     bought_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     description: constr(min_length=1, max_length=64)
+
+    @staticmethod
+    def get_instance(account: Account, amount: float):
+        transaction = Transaction()
+        transaction.account = account
+        transaction.amount = amount
+        transaction.bought_at = datetime.now()
+        transaction.currency = account.currency
+        return transaction
