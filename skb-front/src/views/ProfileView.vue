@@ -9,6 +9,12 @@
           <span class="text-secondary">@{{ cUser.login }}</span>
         </div>
       </div>
+
+      <div class="row mt-5 text-center fw-light">
+        <div class="col-12 col-lg-4">Паспорт: 18 48 ****12</div>
+        <div class="col-12 col-lg-4">ИНН: 456253263552</div>
+        <div class="col-12 col-lg-4">СНИЛС: не указано</div>
+      </div>
     </n-card>
 
     <history-list
