@@ -1,4 +1,6 @@
 import type {Currency} from "./Currency";
+import axios from "axios";
+import {API} from "../utils/constants";
 
 export class Account {
   id: string
@@ -19,5 +21,9 @@ export class Account {
 
   get title(): string {
     return "Счёт в " + this.currency.ticker
+  }
+
+  transferTo(account: Account, amount: number) {
+    return axios.post(`${API}/trading/transfer`, {from: this.id, to: account.id, amount})
   }
 }

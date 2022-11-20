@@ -63,7 +63,8 @@
                   <n-list hoverable>
                     <n-list-item>
                       <div class="d-flex justify-content-center flex-wrap">
-                        <n-avatar :size="60" circle :src="`https://icotar.com/initials/${cUser.fullName}?fg=da5155&bg=f2f2f2`"></n-avatar>
+                        <n-avatar :size="60" :src="`https://icotar.com/initials/${cUser.fullName}?fg=da5155&bg=f2f2f2`"
+                                  circle></n-avatar>
                         <div class="ms-4 my-auto">
                           <n-h2 class="fw-bold mb-1">{{ cUser.firstname }}</n-h2>
                           <span class="mt-1 text-secondary">Перейти в профиль</span>
@@ -122,14 +123,25 @@
         </template>
 
         <div class="text-center w-75 mx-auto">
-          <n-h4 class="fw-bold">Выберете валюту для нового счёта</n-h4>
+          <div
+              v-if="currencies.map(c => ({value: c.id, label: c.ticker})).filter(c => !cUser.accounts.map(a => a.currency.ticker).includes(c.label)).length">
+            <n-h4 class="fw-bold">Выберете валюту для нового счёта</n-h4>
 
-          <n-select v-model:value="newSelectedCurrency"
-                    :options="currencies.map(c => ({value: c.id, label: c.ticker}))"></n-select>
+            <n-select v-model:value="newSelectedCurrency"
+                      :options="currencies.map(c => ({value: c.id, label: c.ticker})).filter(c => !cUser.accounts.map(a => a.currency.ticker).includes(c.label))"></n-select>
 
-          <n-button block class="button-enter" round size="large" type="primary" @click="onClickSubmitCreateAccount">
-            Создать счёт
-          </n-button>
+            <n-button block class="button-enter" round size="large" type="primary" @click="onClickSubmitCreateAccount">
+              Создать счёт
+            </n-button>
+          </div>
+          <div v-else>
+            <n-empty description="Все возможные счета созданы!">
+            </n-empty>
+            <n-button block class="button-enter" round size="large" type="primary"
+                      @click="showCreateAccountModal = false">
+              Закрыть
+            </n-button>
+          </div>
         </div>
       </n-card>
     </n-modal>
