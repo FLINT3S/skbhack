@@ -8,16 +8,16 @@
     <div class="actions ms-auto mt-3 mt-md-0">
       <slot>
         <div class="d-flex">
-          <n-button class="me-3" tertiary type="primary" @click="$emit('change-balance')">
-            <slot name="action-one">
+          <slot name="action-one">
+            <n-button class="me-3" tertiary type="primary" @click="$emit('change-balance')">
               Изменить баланс
-            </slot>
-          </n-button>
-          <n-button :type="blocked ? 'success' : 'primary'" @click="$emit('block')">
-            <slot name="action-two">
+            </n-button>
+          </slot>
+          <slot name="action-two">
+            <n-button :type="blocked ? 'success' : 'primary'" @click="$emit('block')" :disabled="disabled">
               {{ blocked ? 'Разблокировать' : 'Заблокировать' }}
-            </slot>
-          </n-button>
+            </n-button>
+          </slot>
         </div>
       </slot>
     </div>
@@ -38,7 +38,11 @@ export default defineComponent({
     blocked: {
       type: [Boolean],
       default: false,
-    }
+    },
+    disabled: {
+      type: [Boolean],
+      default: false,
+    },
   },
 });
 </script>

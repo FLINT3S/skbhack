@@ -7,13 +7,15 @@
   >
     <transition mode="out-in" name="fade">
       <component :is="layout">
-        <n-message-provider>
-          <router-view v-slot="{ Component }">
-            <transition mode="out-in" name="fade">
-              <component :is="Component"/>
-            </transition>
-          </router-view>
-        </n-message-provider>
+        <n-dialog-provider>
+          <n-message-provider>
+            <router-view v-slot="{ Component }">
+              <transition mode="out-in" name="fade">
+                <component :is="Component"/>
+              </transition>
+            </router-view>
+          </n-message-provider>
+        </n-dialog-provider>
       </component>
     </transition>
   </n-config-provider>

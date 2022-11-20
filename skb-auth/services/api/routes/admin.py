@@ -16,8 +16,7 @@ admin_router = APIRouter()
 async def not_verified_users(
         session: Session = Depends(get_session)
 ):
-    print(session.exec(select(User).where(not User.verify)).all())
-    return session.exec(select(User).where(not User.verify)).all()
+    return session.exec(select(User).where(User.verify == False)).all()
 
 
 #  @admin_required
@@ -25,8 +24,7 @@ async def not_verified_users(
 async def verified_users(
         session: Session = Depends(get_session)
 ):
-    print(session.exec(select(User).where(not User.verify)).first())
-    return session.exec(select(User).where(User.verify))
+    return session.exec(select(User).where(User.verify)).all()
 
 
 #  @admin_required
@@ -43,6 +41,19 @@ async def verify_user(
     return status.HTTP_200_OK
 
 
+@admin_router.post("/dismiss_user")
+async def verify_user(
+        login_dto: LoginDto,
+        session: Session = Depends(get_session)
+):
+    user = session.exec(select(User).where(User.login == login_dto.login)).first()
+
+    session.delete(user)
+    session.commit()
+
+    return status.HTTP_200_OK
+
+
 #  @admin_required
 @admin_router.post("/block_user")
 async def block_user(
@@ -50,10 +61,13 @@ async def block_user(
         session: Session = Depends(get_session)
 ):
     user = session.exec(select(User).where(User.login == login_dto.login)).first()
-    user.blocked = True
 
-    session.add(user)
-    session.commit()
+    if user.firstname != "admin":
+        user.blocked = True
+
+        session.add(user)
+        session.commit()
+        
     return status.HTTP_200_OK
 
 

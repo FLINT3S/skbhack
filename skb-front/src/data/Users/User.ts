@@ -1,4 +1,6 @@
 import type {Account} from "../Account";
+import {API} from "../../utils/constants";
+import axios from "axios";
 
 export class User {
   id: string;
@@ -32,23 +34,60 @@ export class User {
   }
 
   block(): Promise<boolean> {
-    console.log("block");
-
     return new Promise((resolve, reject) => {
       if (this.blocked) {
         reject("User is already blocked")
+        return
       }
-      resolve(true)
+
+      axios.post(`${API}/admin/block_user`, {login: this.login})
+        .then(() => {
+          resolve(true)
+        })
+        .catch((error) => {
+          reject(error)
+        })
     })
   }
 
   unblock(): Promise<boolean> {
-    console.log("unblock");
     return new Promise((resolve, reject) => {
       if (!this.blocked) {
-        reject("User is not blocked")
+        reject("User is already blocked")
+        return
       }
-      resolve(true)
+
+      axios.post(`${API}/admin/unblock_user`, {login: this.login})
+        .then(() => {
+          resolve(true)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
+  accept(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/admin/verify_user`, {login: this.login})
+        .then(() => {
+          resolve(true)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
+  dismiss(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      axios.post(`${API}/admin/dismiss_user`, {login: this.login})
+        .then(() => {
+          resolve(true)
+        })
+        .catch((error) => {
+          reject(error)
+        })
     })
   }
 

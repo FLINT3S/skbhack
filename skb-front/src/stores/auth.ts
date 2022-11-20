@@ -30,7 +30,6 @@ export const useAuthStore = defineStore("auth", () => {
     return new Promise(async (resolve, reject) => {
       axios.post(`${API}/auth/login`, loginData.value)
         .then((response) => {
-          console.log(response)
           Credentials.onLogin(response.data);
           resolve(response.data);
         })
