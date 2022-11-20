@@ -37,7 +37,7 @@
 
     <history-list
         :td="td"
-        :loading="cUser.loadingHistory"
+        :loading="cUser?.loadingHistory"
     />
   </main>
 </template>
