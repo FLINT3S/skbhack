@@ -15,6 +15,8 @@ declare module '@vue/runtime-core' {
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NCheckbox: typeof import('naive-ui')['NCheckbox']
+    NDialogProvider: typeof import('naive-ui')['NDialogProvider']
+    NEmpty: typeof import('naive-ui')['NEmpty']
     NH1: typeof import('naive-ui')['NH1']
     NH2: typeof import('naive-ui')['NH2']
     NH3: typeof import('naive-ui')['NH3']
@@ -26,8 +28,12 @@ declare module '@vue/runtime-core' {
     NListItem: typeof import('naive-ui')['NListItem']
     NModal: typeof import('naive-ui')['NModal']
     NSelect: typeof import('naive-ui')['NSelect']
+    NSkeleton: typeof import('naive-ui')['NSkeleton']
     NSpace: typeof import('naive-ui')['NSpace']
+    NTabPane: typeof import('naive-ui')['NTabPane']
+    NTabs: typeof import('naive-ui')['NTabs']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UserCell: typeof import('./src/components/UserCell.vue')['default']
   }
 }
