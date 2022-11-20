@@ -60,7 +60,7 @@ export const useAuthStore = defineStore("auth", () => {
               reject("Ошибка сервера")
               break
             default:
-              reject("Неизвестная ошибка")
+              reject("Неизвестная ошибка, попробуйте еще раз")
           }
         })
     })
