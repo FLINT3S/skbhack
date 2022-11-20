@@ -41,9 +41,10 @@
           <div class="row mt-4">
             <div class="col-12 col-lg-4">
               <router-link
-                  class="text-decoration-none back-btn" tag="div"
-                  to="/"
                   :class="router.currentRoute.value.path === '/' ? 'collapsed' : ''"
+                  class="text-decoration-none back-btn"
+                  tag="div"
+                  to="/"
               >
                 <n-card class="mb-3" size="large">
                   <div class="d-flex align-items-center">
@@ -146,7 +147,7 @@ import {useRouter} from "vue-router";
 
 import {useUserStore} from "../stores/user";
 import {useMoneyStore} from "../stores/money";
-import {CurrentUser} from "../data/Users/CurrentUser";
+import type {CurrentUser} from "../data/Users/CurrentUser";
 
 import type {Account} from "../data/Account";
 import type {Currency} from "../data/Currency";
@@ -159,12 +160,10 @@ const isAdminPanelButtonShown = computed(() => router.currentRoute.value.path !=
 const {
   accounts,
   totalUSD,
-  groupedAccounts,
   currencies
 } = storeToRefs(useMoneyStore()) as {
   accounts: Ref<Account[]>,
   totalUSD: Ref<number>,
-  groupedAccounts: Ref<Map<string, Account[]>>,
   currencies: Ref<Currency[]>,
 };
 
@@ -173,11 +172,16 @@ const {user: cUser} = storeToRefs(useUserStore()) as {
 };
 
 
-const newSelectedCurrency = ref(null)
+const newSelectedCurrency = ref<string | null>(null)
 const showCreateAccountModal = ref(false)
 
 const onClickSubmitCreateAccount = () => {
-  console.log(newSelectedCurrency.value)
+  if (newSelectedCurrency.value) {
+    cUser.value.createAccount(newSelectedCurrency.value).then(() => {
+      showCreateAccountModal.value = false
+      cUser.value.loadAccounts()
+    })
+  }
 }
 </script>
 
@@ -233,7 +237,7 @@ const onClickSubmitCreateAccount = () => {
 }
 
 .back-btn.collapsed {
-  height: 0!important;
+  height: 0 !important;
   margin: 0;
 }
 </style>

@@ -1,10 +1,12 @@
 import {computed, ref} from "vue";
 import {defineStore} from "pinia";
+import axios from "axios";
 
 import {Account} from "../data/Account";
 import {Currency} from "../data/Currency";
 import type {TransactionsData} from "../data/Transaction";
 import {Transaction} from "../data/Transaction";
+import {API} from "../utils/constants";
 
 
 const __mockData = {
@@ -178,7 +180,7 @@ const __mockData = {
 }
 
 export const useMoneyStore = defineStore('money', () => {
-  const currencies = ref<Currency[]>(__mockData.currencies.map((currency, index) => new Currency(currency.id, currency.ticker, currency.currencySymbol, currency.value, currency.growth)))
+  const currencies = ref<Currency[]>([])
 
   const accounts = ref<Account[]>(__mockData.accounts.map(account => new Account(account.id, Currency.fromJSON(account.currency), account.amount, account.amountUSD)))
 
@@ -202,11 +204,21 @@ export const useMoneyStore = defineStore('money', () => {
     return grouped
   })
 
+  function loadCurrencies(): Promise<Currency[]> {
+    return new Promise(resolve => {
+      axios.get(`${API}/balance/currencies`).then(({data}) => {
+        currencies.value = data.map((currency: Currency) => Currency.fromJSON(currency))
+        resolve(currencies.value)
+      })
+    })
+  }
+
   return {
     accounts,
     currencies,
     totalUSD,
     groupedAccounts,
-    transactionsData
+    transactionsData,
+    loadCurrencies
   }
 });

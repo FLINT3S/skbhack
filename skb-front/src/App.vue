@@ -31,9 +31,11 @@ import {parseJwt} from "./utils/other";
 import {storeToRefs} from "pinia";
 import {useUserStore} from "./stores/user";
 import {CurrentUser} from "./data/Users/CurrentUser";
+import {useMoneyStore} from "./stores/money";
 
 const router = useRouter();
 const {user: globalUser, token: globalToken} = storeToRefs(useUserStore())
+const {loadCurrencies} = useMoneyStore()
 
 const token = localStorage.getItem("token") || "";
 if (token) {
@@ -43,6 +45,7 @@ if (token) {
     globalToken.value = token;
     globalUser.value = new CurrentUser(user.id, user.login, user.firstname, user.surname, user.verify, user.blocked, user.role);
     globalUser.value.loadAccounts();
+    loadCurrencies();
   } catch (e) {
     localStorage.removeItem("token");
     router.push("/auth/login");

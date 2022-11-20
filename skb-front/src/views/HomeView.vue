@@ -87,6 +87,7 @@ import {getDayAndMonth} from "../utils/strings";
 import {useMoneyStore} from "../stores/money";
 import {useUserStore} from "../stores/user";
 
+import type {CurrentUser} from "../data/Users/CurrentUser";
 import type {Account} from "../data/Account";
 import type {Currency} from "../data/Currency";
 import type {TransactionsData} from "../data/Transaction";
@@ -106,7 +107,8 @@ const {
   transactionsData: Ref<TransactionsData[]>
 };
 
-const {user: currentUser} = storeToRefs(useUserStore())
+const {user: cUser} = storeToRefs(useUserStore()) as { user: Ref<CurrentUser> };
+cUser.value.loadHistory()
 
 const chartData = ref({
   labels: Array.from(groupedAccounts.value.keys()),
