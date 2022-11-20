@@ -35,7 +35,7 @@ export const useMoneyStore = defineStore('money', () => {
 
   function loadCurrencies(): Promise<Currency[]> {
     return new Promise(resolve => {
-      axios.get(`${API}/balance/currencies`).then(({data}) => {
+      axios.get(`${API}/trading/currencies`).then(({data}) => {
         // @ts-ignore
         currencies.value = data.map((currency: Currency) => Currency.fromJSON({...currency, value: currency.rate}))
         resolve(currencies.value)

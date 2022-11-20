@@ -32,6 +32,7 @@ import {storeToRefs} from "pinia";
 import {useUserStore} from "./stores/user";
 import {CurrentUser} from "./data/Users/CurrentUser";
 import {useMoneyStore} from "./stores/money";
+import axios from "axios";
 
 const router = useRouter();
 const {user: cUser, token: globalToken} = storeToRefs(useUserStore())
@@ -43,6 +44,7 @@ if (token) {
     const user = parseJwt(token) as CurrentUser;
 
     globalToken.value = token;
+    axios.defaults.headers.common['Authorization'] = token;
     cUser.value = new CurrentUser(user.id, user.login, user.firstname, user.surname, user.verify, user.blocked, user.role);
     if (!cUser.value.verify) {
       router.replace("/auth/verify");
