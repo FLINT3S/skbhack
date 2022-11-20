@@ -50,11 +50,11 @@ def _create_transactions(
     current_rates = ExchangeRates()
     currency_cost = _get_currency_cost(current_rates, from_account.currency.ticker, to_account.currency.ticker)
 
-    from_account_transaction = Transaction.get_instance(from_account, -float(amount) ** -1)
+    from_account_transaction = Transaction.get_instance(from_account, -amount)
     from_account_transaction.rate = float(currency_cost) ** -1
     from_account_transaction.description = f"Перевод из {from_account.currency.ticker} в {to_account.currency.ticker}"
 
-    to_account_transaction = Transaction.get_instance(to_account, amount * currency_cost)
+    to_account_transaction = Transaction.get_instance(to_account, -float(amount) * currency_cost ** -1)
     to_account_transaction.rate = currency_cost
     to_account_transaction.description = f"Перевод из {from_account.currency.ticker} в {to_account.currency.ticker}"
 
@@ -97,3 +97,18 @@ def _is_falling(current_rates: ExchangeRates, previous_rates: ExchangeRates, fro
     previous_rate = get_cost(previous_rates, from_ticker) / get_cost(previous_rates, to_ticker)
 
     return current_rate > previous_rate
+
+
+@buy_router.get("/currencyHistory/{ticker}")
+def get_history(ticker: str):
+    date = datetime.now()
+    response = []
+    for i in range(14):
+        current_rates = ExchangeRates(date)
+        response += {
+            "day": int(round(date.timestamp())),
+            "rate": float(current_rates[ticker].rate)
+        }
+        date -= timedelta(days=1)
+
+    return JSONResponse(content=response)

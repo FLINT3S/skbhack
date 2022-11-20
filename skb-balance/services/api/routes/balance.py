@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from fastapi import APIRouter, Depends, HTTPException
 from pycbrf import ExchangeRates
 from sqlmodel import Session, select
