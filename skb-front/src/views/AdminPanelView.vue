@@ -66,7 +66,7 @@
 
 
         <div class="text-center w-75 mx-auto">
-          <n-h4>Выберете счёт пользователя {{ selectedUser.fullName }}</n-h4>
+          <n-h4>Выберете счёт пользователя {{ selectedUser?.fullName }}</n-h4>
 
           <div v-if="selectedUser?.loadingAccounts">
             <n-skeleton height="35px"></n-skeleton>
