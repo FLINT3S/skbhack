@@ -11,7 +11,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
 from starlette import status
-from starlette.responses import Response
 
 from .dtos import *
 
@@ -62,12 +61,14 @@ async def login(
     user_login = login_user_dto.login
     user = session.exec(select(User).where(User.login == user_login)).first()
     if user is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Такого пользователя не существует.")
+
     # Create and return jwt token
     user.id = str(user.id)
     if user.check_password(str(login_user_dto.password)):
         return jwt.encode(user.dict(), secret_key, algorithm="HS256")
+
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                         detail="Пароли не совпадают.")
 
@@ -80,7 +81,7 @@ async def change_password(
     user_login = login_user_dto.login
     user = session.exec(select(User).where(User.login == user_login)).first()
     if user is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Такого пользователя не существует.")
 
     if user.check_password(str(login_user_dto.password)):

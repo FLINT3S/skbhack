@@ -21,6 +21,7 @@ async def create_account(create_account_dto: CreateAccountDto, session: Session 
     user = session.exec(select(User).where(User.id == create_account_dto.user_id)).first()
     if user is None:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
+
     currency = session.exec(select(Currency).where(Currency.id == create_account_dto.currency_id)).first()
     if currency is None:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
@@ -37,6 +38,7 @@ async def get_account_history(account_id: UUID, session: Session = Depends(get_s
     account = session.exec(select(Account).where(Account.id == account_id)).first()
     if account is None:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
+
     response = {}
     add_transactions_and_sort_by_date(account, response)
     return JSONResponse(content=list(response.values()))
@@ -67,9 +69,11 @@ async def get_account_history(user_id: UUID, session: Session = Depends(get_sess
     user = session.exec(select(User).where(User.id == user_id)).first()
     if user is None:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
+
     response = {}
     for account in user.accounts:
         add_transactions_and_sort_by_date(account, response)
+
     return JSONResponse(content=list(response.values()))
 
 
@@ -78,6 +82,7 @@ async def get_account_history(user_id: UUID, session: Session = Depends(get_sess
     user = session.exec(select(User).where(User.id == user_id)).first()
     if user is None:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
+
     response = list(map(lambda a: {
         "id": str(a.id),
         "amount": a.amount,
@@ -105,3 +110,19 @@ async def change_account_balance(change_balance_dto: ChangeBalanceDto, session: 
     session.commit()
 
     return Response(status_code=status.HTTP_200_OK)
+
+
+@balance_router.get("/{user_id}")
+async def get_user_info(user_id: UUID, session: Session = Depends(get_session)):
+    user = session.exec(select(User).where(User.id == user_id)).first()
+    if user is None:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+    return JSONResponse(content={
+        "id": user.id,
+        "firstname": user.firstname,
+        "surname": user.surname,
+        "login": user.login,
+        "blocked": user.blocked,
+        "verified": user.verify
+    })
