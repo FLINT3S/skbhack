@@ -67,7 +67,7 @@ const registerError = ref("");
 
 const onClickSubmitRegister = () => {
   submitRegister().then(() => {
-    router.replace("/");
+    router.replace("/auth/verify");
   }).catch((e) => {
     registerError.value = e
   });

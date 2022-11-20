@@ -4,7 +4,7 @@
       <span>{{ title }}</span>
     </div>
     <div class="currency-indicator__value d-flex align-items-center" :class="computedGrowth ? 'up' : 'down'">
-      <span>{{ currencySymbol }}{{ value }}</span>
+      <span>{{ currencySymbol }}{{ value.toFixed(2) }}</span>
       <span class="material-icons-round">
         {{ computedGrowth ? 'arrow_drop_up' : 'arrow_drop_down' }}
       </span>
