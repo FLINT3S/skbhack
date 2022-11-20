@@ -5,10 +5,10 @@
     </div>
 
     <div class="row align-items-center">
-      <div class="col-1">
+      <div class="col-12 mt-1 col-md-1">
         <div>Из:</div>
       </div>
-      <div class="col-8">
+      <div class="col-12 mt-1 col-md-8">
         <n-input
             v-model:value="fromValue"
             :disabled="!fromCurrency || !toCurrency"
@@ -16,7 +16,7 @@
             type="number"
         />
       </div>
-      <div class="col-3">
+      <div class="col-12 mt-1 col-md-3">
         <n-select
             v-model:value="fromCurrency"
             :options="fromCurrencies"
@@ -25,10 +25,10 @@
       </div>
     </div>
     <div class="row align-items-center mt-3">
-      <div class="col-1">
+      <div class="col-12 mt-1 col-md-1">
         <div>В:</div>
       </div>
-      <div class="col-8">
+      <div class="col-12 mt-1 col-md-8">
         <n-input
             :disabled="!fromCurrency || !toCurrency"
             :suffix="fromCurrency"
@@ -37,7 +37,7 @@
             type="number"
         />
       </div>
-      <div class="col-3">
+      <div class="col-12 mt-1 col-md-3">
         <n-select
             v-model:value="toCurrency"
             :options="toCurrencies"
@@ -120,14 +120,21 @@ const rate = computed(() => {
 })
 
 const message = useMessage()
+const emit = defineEmits(['convert'])
 
 const onClickSubmitConvert = async () => {
   const fromAccount = cUser.value?.accounts.find(a => a.currency.ticker === from.value!.ticker)
   const toAccount = cUser.value?.accounts.find(a => a.currency.ticker === to.value!.ticker)
 
   if (fromAccount) {
-    fromAccount.transferTo(toAccount!, fromValue.value).catch(() => {
+    fromAccount.transferTo(toAccount!, fromValue.value)
+        .then(() => {
+          message.success("Конвертация прошла успешно")
+        })
+        .catch(() => {
       message.error("Не удалось конвертировать валюту")
+    }).finally(() => {
+      emit("convert")
     })
     cUser.value?.loadAccounts();
   }
