@@ -11,7 +11,7 @@ class APIService:
             title="API",
         )
 
-        #TODO убрать *
+        # TODO убрать *
         origins = ["*"]
         self.app.add_middleware(
             CORSMiddleware,
@@ -20,7 +20,6 @@ class APIService:
             allow_methods=[""],
             allow_headers=[""],
         )
-
 
         self.attach_routes()
 
