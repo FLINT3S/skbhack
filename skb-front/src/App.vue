@@ -23,14 +23,20 @@
 
 <script lang="ts" setup>
 import {dateRuRU, lightTheme, NConfigProvider, NMessageProvider, ruRU,} from "naive-ui";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import EmptyLayout from "./layout/EmptyLayout.vue";
 import {computed} from "vue";
 import themeOverrides from "./assets/styles/theme/naive-ui-theme-overrides.json";
 import {parseJwt} from "./utils/other";
 
+const router = useRouter();
+
 const token = localStorage.getItem("token") || "";
-const user = parseJwt(token);
+if (token) {
+  const user = parseJwt(token);
+} else {
+  router.replace("/auth/login");
+}
 
 const route = useRoute();
 const layout = computed(() => {
