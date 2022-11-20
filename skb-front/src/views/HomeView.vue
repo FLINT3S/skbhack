@@ -14,6 +14,7 @@
                 round
                 size="large"
                 type="primary"
+                @click="$router.push('/converter')"
             >
               Конвертация валют
             </n-button>
@@ -24,6 +25,7 @@
                 secondary
                 size="large"
                 type="primary"
+                @click="$router.push('/currencyHistory')"
             >
               Курсы валют и прогнозы
             </n-button>

@@ -15,7 +15,11 @@
                     :role="user.roleTitle"
                     @block="onClickBlock(user)"
                     @change-balance="onClickChangeBalance(user)"
-                />
+                >
+                  <template #action-one>
+                    <div></div>
+                  </template>
+                </user-cell>
               </n-list-item>
             </n-list>
           </div>

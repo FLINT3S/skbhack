@@ -77,6 +77,22 @@ const router = createRouter({
       meta: {
         layout: MainLayout,
       }
+    },
+    {
+      path: "/converter",
+      name: "converter",
+      component: () => import("../views/ConverterView.vue"),
+      meta: {
+        layout: MainLayout
+      }
+    },
+    {
+      path: "/currencyHistory",
+      name: "currencyHistory",
+      component: () => import("../views/HistoryView.vue"),
+      meta: {
+        layout: MainLayout
+      }
     }
   ],
 });

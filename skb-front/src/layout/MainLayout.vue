@@ -79,6 +79,13 @@
               </router-link>
 
               <n-card class="mt-3 mt-lg-4" size="large" title="Ваши счета">
+                <template #header-extra>
+                  <n-button quaternary @click="updateData">
+                    <div class="material-icons-round">
+                      refresh
+                    </div>
+                  </n-button>
+                </template>
                 <div v-if="cUser && cUser.accounts">
                   <n-list clickable hoverable>
                     <n-list-item v-for="a in cUser.accounts" @click="$router.push('/account/' + a.id)">
@@ -195,6 +202,14 @@ const onClickSubmitCreateAccount = () => {
     })
   }
 }
+
+const updateData = () => {
+  cUser.value.loadAccounts()
+}
+
+setInterval(() => {
+  updateData()
+}, 10000)
 
 const currenciesTopList = computed(() => {
   return currencies.value.slice(1, 5)
