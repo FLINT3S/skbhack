@@ -10,7 +10,10 @@
           type="password"
       />
     </n-space>
-    {{ loginError }}
+
+    <div v-if="loginError" class="mt-3 text-danger">
+      {{ loginError }}
+    </div>
 
     <n-button
         :disabled="!(loginData.login && loginData.password)"
@@ -47,8 +50,13 @@ const onClickSubmitLogin = () => {
         router.replace("/")
       })
       .catch((e) => {
-        console.log(e)
-        loginError.value = e;
+        if (e === "VERIFY") {
+          router.replace("/auth/verify");
+        } else if (e === "BLOCK") {
+          router.replace("/auth/block");
+        } else {
+          loginError.value = e;
+        }
       });
 };
 </script>

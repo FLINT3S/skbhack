@@ -1,7 +1,11 @@
 export const currenciesColors = {
   "RUB": 'rgb(61,191,191)',
   "USD": "rgb(252,188,91)",
-  "EUR": "rgb(64,135,201)"
+  "EUR": "rgb(64,135,201)",
+  "GBP": "rgb(201,64,126)",
+  "CNY": "rgb(119,64,201)",
+  "ISL": "rgb(201,105,64)",
+  "KZT": "rgb(139,201,64)",
 }
 
 export class Currency {

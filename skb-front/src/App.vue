@@ -28,12 +28,28 @@ import EmptyLayout from "./layout/EmptyLayout.vue";
 import {computed} from "vue";
 import themeOverrides from "./assets/styles/theme/naive-ui-theme-overrides.json";
 import {parseJwt} from "./utils/other";
+import {storeToRefs} from "pinia";
+import {useUserStore} from "./stores/user";
+import {CurrentUser} from "./data/Users/CurrentUser";
+import {useMoneyStore} from "./stores/money";
 
 const router = useRouter();
+const {user: cUser, token: globalToken} = storeToRefs(useUserStore())
+const {loadCurrencies} = useMoneyStore()
 
 const token = localStorage.getItem("token") || "";
 if (token) {
-  const user = parseJwt(token);
+  try {
+    const user = parseJwt(token) as CurrentUser;
+
+    globalToken.value = token;
+    cUser.value = new CurrentUser(user.id, user.login, user.firstname, user.surname, user.verify, user.blocked, user.role);
+    cUser.value.loadAccounts();
+    loadCurrencies();
+  } catch (e) {
+    localStorage.removeItem("token");
+    router.push("/auth/login");
+  }
 } else {
   router.replace("/auth/login");
 }

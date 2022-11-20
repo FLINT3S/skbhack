@@ -20,8 +20,7 @@ export class Transaction {
   }
 
   get time(): string {
-    //return time without seconds
-    return new Date(this.datetime).toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'})
+    return new Date(this.datetime * 1000).toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'})
   }
 
   get caption(): string {

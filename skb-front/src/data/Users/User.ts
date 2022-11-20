@@ -1,13 +1,14 @@
-import type {Account} from "../Account";
-import {API} from "../../utils/constants";
 import axios from "axios";
+import {API} from "../../utils/constants";
+import {Account} from "../Account";
+import {Currency} from "../Currency";
+
 
 export class User {
   id: string;
   login: string;
   firstname: string;
   surname: string;
-  createdAt?: number;
   verify?: boolean;
   blocked?: boolean;
   role?: string;
@@ -95,9 +96,19 @@ export class User {
     this.loadingAccounts = true;
 
     return new Promise((resolve, reject) => {
-      resolve(this.accounts)
-      console.log("loadAccounts");
-      this.loadingAccounts = false;
+
+      axios.get(`${API}/balance/getAccounts/${this.id}`)
+        .then((res) => {
+          this.accounts = res.data.map((account: any) => {
+            return new Account(account.id, Currency.fromJSON(account.currency), account.amount, account.amountUSD)
+          })
+          resolve(this.accounts)
+        })
+        .catch((error) => {
+          reject(error)
+        }).finally(() => {
+        this.loadingAccounts = false;
+      })
     })
   }
 }

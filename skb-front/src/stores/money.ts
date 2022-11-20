@@ -1,10 +1,14 @@
 import {computed, ref} from "vue";
-import {defineStore} from "pinia";
+import {defineStore, storeToRefs} from "pinia";
+import axios from "axios";
+
+import {useUserStore} from "../stores/user";
 
 import {Account} from "../data/Account";
 import {Currency} from "../data/Currency";
 import type {TransactionsData} from "../data/Transaction";
 import {Transaction} from "../data/Transaction";
+import {API} from "../utils/constants";
 
 
 const __mockData = {
@@ -178,8 +182,9 @@ const __mockData = {
 }
 
 export const useMoneyStore = defineStore('money', () => {
-  const currencies = ref<Currency[]>(__mockData.currencies.map((currency, index) => new Currency(currency.id, currency.ticker, currency.currencySymbol, currency.value, currency.growth)))
+  const {user: cUser} = storeToRefs(useUserStore())
 
+  const currencies = ref<Currency[]>([])
   const accounts = ref<Account[]>(__mockData.accounts.map(account => new Account(account.id, Currency.fromJSON(account.currency), account.amount, account.amountUSD)))
 
   const totalUSD = computed(() => accounts.value.reduce((acc, account) => acc + account.amountUSD, 0))
@@ -192,7 +197,7 @@ export const useMoneyStore = defineStore('money', () => {
   const groupedAccounts = computed(() => {
     const grouped = new Map<string, Account[]>()
 
-    accounts.value.forEach(account => {
+    cUser.value?.accounts?.forEach(account => {
       const key = account.currency.ticker
       const group = grouped.get(key) || []
       group.push(account)
@@ -202,11 +207,31 @@ export const useMoneyStore = defineStore('money', () => {
     return grouped
   })
 
+  function loadCurrencies(): Promise<Currency[]> {
+    return new Promise(resolve => {
+      axios.get(`${API}/balance/currencies`).then(({data}) => {
+        currencies.value = data.map((currency: Currency) => Currency.fromJSON(currency))
+        resolve(currencies.value)
+      })
+    })
+  }
+
+  function loadCurrentUserHistory(): Promise<TransactionsData[]> {
+    return new Promise(resolve => {
+      cUser.value!.loadHistory().then(data => {
+        transactionsData.value = data
+        resolve(transactionsData.value)
+      })
+    })
+  }
+
   return {
     accounts,
     currencies,
     totalUSD,
     groupedAccounts,
-    transactionsData
+    transactionsData,
+    loadCurrencies,
+    loadCurrentUserHistory
   }
 });

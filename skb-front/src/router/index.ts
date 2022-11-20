@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import {createRouter, createWebHashHistory} from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import MainLayout from "../layout/MainLayout.vue";
 
@@ -42,12 +42,30 @@ const router = createRouter({
           name: "logout",
           component: () => import("../views/Auth/LogoutView.vue"),
         },
+        {
+          path: "verify",
+          name: "verify",
+          component: () => import("../views/Auth/VerifyView.vue"),
+        },
+        {
+          path: "block",
+          name: "block",
+          component: () => import("../views/Auth/BlockView.vue"),
+        }
       ],
     },
     {
       path: "/admin",
       name: "admin",
       component: () => import("../views/AdminPanelView.vue"),
+      meta: {
+        layout: MainLayout,
+      }
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      component: () => import("../views/ProfileView.vue"),
       meta: {
         layout: MainLayout,
       }
