@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pycbrf import ExchangeRates
 from sqlmodel import Session, select
 from starlette import status
@@ -23,11 +23,11 @@ async def healthcheck():
 async def create_account(create_account_dto: CreateAccountDto, session: Session = Depends(get_session)):
     user = session.exec(select(User).where(User.id == create_account_dto.user_id)).first()
     if user is None:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     currency = session.exec(select(Currency).where(Currency.id == create_account_dto.currency_id)).first()
     if currency is None:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     account = Account.get_instance(user, currency)
     session.add(account)
@@ -40,7 +40,7 @@ async def create_account(create_account_dto: CreateAccountDto, session: Session 
 async def get_account_history(account_id: UUID, session: Session = Depends(get_session)):
     account = session.exec(select(Account).where(Account.id == account_id)).first()
     if account is None:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     response = {}
     add_transactions_and_sort_by_date(account, response)
@@ -71,7 +71,7 @@ def add_transactions_and_sort_by_date(account: Account, response):
 async def get_account_history(user_id: UUID, session: Session = Depends(get_session)):
     user = session.exec(select(User).where(User.id == user_id)).first()
     if user is None:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     response = {}
     for account in user.accounts:
@@ -84,7 +84,7 @@ async def get_account_history(user_id: UUID, session: Session = Depends(get_sess
 async def get_account_history(user_id: UUID, session: Session = Depends(get_session)):
     user = session.exec(select(User).where(User.id == user_id)).first()
     if user is None:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     rates = ExchangeRates()
     response = list(map(lambda a: {
@@ -112,7 +112,7 @@ def _get_currency_cost(rates: ExchangeRates, from_ticker: str, to_ticker: str) -
 async def change_account_balance(change_balance_dto: ChangeBalanceDto, session: Session = Depends(get_session)):
     account = session.exec(select(Account).where(Account.id == change_balance_dto.account_id)).first()
     if account is None:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     transaction = Transaction.get_instance(account, change_balance_dto.amount)
     transaction.rate = 1

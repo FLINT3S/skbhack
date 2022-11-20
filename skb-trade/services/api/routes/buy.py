@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Tuple
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from pycbrf import ExchangeRates
 from starlette import status
@@ -25,7 +25,9 @@ async def transfer_currency(transfer_dto: TransferDto, session: Session = Depend
     from_account = session.exec(select(Account).where(Account.id == transfer_dto.from_id)).first()
     to_account = session.exec(select(Account).where(Account.id == transfer_dto.to_id)).first()
     if from_account is None or to_account is None:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    if from_account.amount < transfer_dto.amount:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
     transactions = _create_transactions(from_account, to_account, transfer_dto.amount)
 
