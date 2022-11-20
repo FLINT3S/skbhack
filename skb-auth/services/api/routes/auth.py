@@ -63,6 +63,12 @@ async def login(
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Такого пользователя не существует.")
+    if user.blocked:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="Blocked.")
+    if not user.verify:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail="Unverified.")
 
     # Create and return jwt token
     user.id = str(user.id)
