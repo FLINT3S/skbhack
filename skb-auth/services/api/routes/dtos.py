@@ -11,3 +11,12 @@ class CreateUserDto(BaseModel):
 class LoginUserDto(BaseModel):
     login: str
     password: str
+
+
+class LoginDto(BaseModel):
+    login: str
+
+
+class RoleChangeDto(BaseModel):
+    login: str
+    role_name: str

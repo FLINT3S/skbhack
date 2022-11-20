@@ -1,8 +1,7 @@
 fastapi
 uvicorn[standard]
-bcrypt
 sqlmodel
 psycopg2
 python-dotenv
 pycbrf
-pyjwt
+bcrypt

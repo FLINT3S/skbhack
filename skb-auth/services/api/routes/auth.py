@@ -1,15 +1,30 @@
-from fastapi import APIRouter, Depends, Form
+import jwt
+import os
+
+from ...database.service import get_session
+from ...database.models import User, Account, Currency
+
+from dotenv import load_dotenv
+
+from fastapi import APIRouter, Depends, HTTPException
+
 from sqlmodel import Session, select
 
 from starlette import status
-from starlette.responses import Response, JSONResponse
-
-from ...database.service import get_session
-from ...database.models import User, Role, Account, Currency
 
 from .dtos import *
 
+
+load_dotenv()
+secret_key = os.environ["SECRET_KEY"]
+
 auth_router = APIRouter()
+
+
+# For docker
+@auth_router.get("/healthcheck")
+async def healthcheck():
+    return {"status": "ok"}
 
 
 @auth_router.post("/register")
@@ -17,6 +32,10 @@ async def register(
         create_user_dto: CreateUserDto,
         session: Session = Depends(get_session)
 ):
+    if session.exec(select(User).where(User.login == create_user_dto.login)).first() is not None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Такой логин уже есть в базе.")
+
     user = User.get_instance(
         login=create_user_dto.login,
         firstname=create_user_dto.firstname,
@@ -30,7 +49,8 @@ async def register(
     session.add(account)
     session.add(user)
     session.commit()
-    return user
+    user.id = str(user.id)
+    return jwt.encode(user.dict(), secret_key, algorithm="HS256")
 
 
 @auth_router.post("/login")
@@ -41,6 +61,31 @@ async def login(
     user_login = login_user_dto.login
     user = session.exec(select(User).where(User.login == user_login)).first()
     if user is None:
-        return Response(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Такого пользователя не существует.")
 
-    return user.check_password(login_user_dto.password)
+    # Create and return jwt token
+    user.id = str(user.id)
+    if user.check_password(str(login_user_dto.password)):
+        return jwt.encode(user.dict(), secret_key, algorithm="HS256")
+
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="Пароли не совпадают.")
+
+
+@auth_router.post("/change_password")
+async def change_password(
+        login_user_dto: LoginUserDto,
+        session: Session = Depends(get_session)
+):
+    user_login = login_user_dto.login
+    user = session.exec(select(User).where(User.login == user_login)).first()
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Такого пользователя не существует.")
+
+    if user.check_password(str(login_user_dto.password)):
+        user.set_password(str(login_user_dto.password))
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Пароли не совпадают.")

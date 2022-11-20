@@ -1,13 +1,14 @@
 import os
 
+from sqlmodel import Session, SQLModel, create_engine
 from dotenv import load_dotenv
-from sqlmodel import Session, create_engine
 
 from .models import *
 
 load_dotenv()
 
 engine = create_engine(os.environ["CONNECTION_STRING"])
+print(f"Connectig to DB: {os.environ['CONNECTION_STRING']}")
 SQLModel.metadata.create_all(engine)
 
 with Session(engine) as session:
@@ -25,6 +26,7 @@ with Session(engine) as session:
 
 
 def init_db():
+    print(engine)
     SQLModel.metadata.create_all(engine)
 
 

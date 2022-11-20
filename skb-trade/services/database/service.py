@@ -8,7 +8,6 @@ from .models import *
 load_dotenv()
 
 engine = create_engine(os.environ["CONNECTION_STRING"])
-print(f"Connectig to DB: {os.environ['CONNECTION_STRING']}")
 SQLModel.metadata.create_all(engine)
 
 with Session(engine) as session:

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .routes import balance_router, index_router
 
@@ -9,6 +10,17 @@ class APIService:
         self.app = FastAPI(
             title="API",
         )
+
+        #TODO убрать *
+        origins = ["*"]
+        self.app.add_middleware(
+            CORSMiddleware,
+            allow_origins=origins,
+            allow_credentials=True,
+            allow_methods=[""],
+            allow_headers=[""],
+        )
+
 
         self.attach_routes()
 
