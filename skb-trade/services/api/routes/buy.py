@@ -50,11 +50,11 @@ def _create_transactions(
     current_rates = ExchangeRates()
     currency_cost = _get_currency_cost(current_rates, from_account.currency.ticker, to_account.currency.ticker)
 
-    from_account_transaction = Transaction.get_instance(from_account, amount)
+    from_account_transaction = Transaction.get_instance(from_account, -amount)
     from_account_transaction.rate = currency_cost
     from_account_transaction.description = f"Перевод из {from_account.currency.ticker} в {to_account.currency.ticker}"
 
-    to_account_transaction = Transaction.get_instance(to_account, -float(amount) * currency_cost)
+    to_account_transaction = Transaction.get_instance(to_account, float(amount) * currency_cost)
     to_account_transaction.rate = float(currency_cost) ** -1
     to_account_transaction.description = f"Перевод из {from_account.currency.ticker} в {to_account.currency.ticker}"
 
