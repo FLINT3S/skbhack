@@ -10,7 +10,14 @@
       </div>
     </template>
 
-    <n-list v-for="(transactionsDay, index) in td" v-if="td.length > 0 && !loading" class="mt-3">
+
+    <div v-if="loading">
+      <n-skeleton class="mt-2" height="55px" repeat="5"></n-skeleton>
+    </div>
+    <div v-else-if="!loading && !td.length">
+      <n-empty description="Нет недавней активности"></n-empty>
+    </div>
+    <n-list v-for="(transactionsDay, index) in td" v-else class="mt-3">
       <n-h2 class="mb-2">{{ getDayAndMonth(transactionsDay.day * 1000, true).toLowerCase() }}</n-h2>
 
       <n-list-item v-for="t in transactionsDay.transactions">
@@ -35,9 +42,6 @@
         </div>
       </n-list-item>
     </n-list>
-    <div v-else>
-      <n-skeleton class="mt-2" height="55px" repeat="5"></n-skeleton>
-    </div>
   </n-card>
 </template>
 

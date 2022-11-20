@@ -44,6 +44,14 @@ if (token) {
 
     globalToken.value = token;
     cUser.value = new CurrentUser(user.id, user.login, user.firstname, user.surname, user.verify, user.blocked, user.role);
+    if (!cUser.value.verify) {
+      router.replace("/auth/verify");
+    } else if (cUser.value.blocked) {
+      router.replace("/auth/block");
+    } else {
+      cUser.value.loadAccounts();
+      loadCurrencies();
+    }
     cUser.value.loadAccounts();
     loadCurrencies();
   } catch (e) {

@@ -9,14 +9,14 @@ export const currenciesColors = {
 }
 
 export class Currency {
-  id: number
+  id: string
   ticker: string
   symbol: string
   value?: number
   growth?: boolean
   color?: string
 
-  constructor(id: number, ticker: string, symbol: string, value?: number, growth?: boolean, color?: string) {
+  constructor(id: string, ticker: string, symbol: string, value?: number, growth?: boolean, color?: string) {
     this.id = id
     this.ticker = ticker
     this.symbol = symbol
