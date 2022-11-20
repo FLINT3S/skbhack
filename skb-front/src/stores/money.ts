@@ -1,6 +1,8 @@
 import {computed, ref} from "vue";
-import {defineStore} from "pinia";
+import {defineStore, storeToRefs} from "pinia";
 import axios from "axios";
+
+import {useUserStore} from "../stores/user";
 
 import {Account} from "../data/Account";
 import {Currency} from "../data/Currency";
@@ -180,8 +182,9 @@ const __mockData = {
 }
 
 export const useMoneyStore = defineStore('money', () => {
-  const currencies = ref<Currency[]>([])
+  const {user: cUser} = storeToRefs(useUserStore())
 
+  const currencies = ref<Currency[]>([])
   const accounts = ref<Account[]>(__mockData.accounts.map(account => new Account(account.id, Currency.fromJSON(account.currency), account.amount, account.amountUSD)))
 
   const totalUSD = computed(() => accounts.value.reduce((acc, account) => acc + account.amountUSD, 0))
@@ -213,12 +216,22 @@ export const useMoneyStore = defineStore('money', () => {
     })
   }
 
+  function loadCurrentUserHistory(): Promise<TransactionsData[]> {
+    return new Promise(resolve => {
+      cUser.value!.loadHistory().then(data => {
+        transactionsData.value = data
+        resolve(transactionsData.value)
+      })
+    })
+  }
+
   return {
     accounts,
     currencies,
     totalUSD,
     groupedAccounts,
     transactionsData,
-    loadCurrencies
+    loadCurrencies,
+    loadCurrentUserHistory
   }
 });

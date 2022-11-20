@@ -34,7 +34,7 @@ import {CurrentUser} from "./data/Users/CurrentUser";
 import {useMoneyStore} from "./stores/money";
 
 const router = useRouter();
-const {user: globalUser, token: globalToken} = storeToRefs(useUserStore())
+const {user: cUser, token: globalToken} = storeToRefs(useUserStore())
 const {loadCurrencies} = useMoneyStore()
 
 const token = localStorage.getItem("token") || "";
@@ -43,8 +43,8 @@ if (token) {
     const user = parseJwt(token) as CurrentUser;
 
     globalToken.value = token;
-    globalUser.value = new CurrentUser(user.id, user.login, user.firstname, user.surname, user.verify, user.blocked, user.role);
-    globalUser.value.loadAccounts();
+    cUser.value = new CurrentUser(user.id, user.login, user.firstname, user.surname, user.verify, user.blocked, user.role);
+    cUser.value.loadAccounts();
     loadCurrencies();
   } catch (e) {
     localStorage.removeItem("token");

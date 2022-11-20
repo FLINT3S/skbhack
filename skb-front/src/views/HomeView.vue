@@ -46,7 +46,7 @@
         </div>
       </template>
 
-      <n-list v-for="(transactionsDay, index) in td" class="mt-3">
+      <n-list v-for="(transactionsDay, index) in td" v-if="td.length > 0 && !cUser?.loadingHistory" class="mt-3">
         <n-h2 class="mb-2">{{ getDayAndMonth(transactionsDay.day * 1000, true).toLowerCase() }}</n-h2>
 
         <n-list-item v-for="t in transactionsDay.transactions">
@@ -66,11 +66,14 @@
 
               <span class="mt-3 text-secondary">
                     {{ t.time }}
-                  </span>
+              </span>
             </div>
           </div>
         </n-list-item>
       </n-list>
+      <div v-else>
+        <n-skeleton class="mt-2" height="55px" repeat="5"></n-skeleton>
+      </div>
     </n-card>
   </main>
 </template>
@@ -85,11 +88,9 @@ import ColorBalance from "../components/ColorBalance.vue";
 import {getDayAndMonth} from "../utils/strings";
 
 import {useMoneyStore} from "../stores/money";
-import {useUserStore} from "../stores/user";
-
-import type {CurrentUser} from "../data/Users/CurrentUser";
 import type {Account} from "../data/Account";
 import type {Currency} from "../data/Currency";
+import {useUserStore} from "../stores/user";
 import type {TransactionsData} from "../data/Transaction";
 
 
@@ -107,8 +108,11 @@ const {
   transactionsData: Ref<TransactionsData[]>
 };
 
-const {user: cUser} = storeToRefs(useUserStore()) as { user: Ref<CurrentUser> };
-cUser.value.loadHistory()
+const {loadCurrentUserHistory} = useMoneyStore()
+loadCurrentUserHistory()
+
+const {user: cUser} = storeToRefs(useUserStore())
+
 
 const chartData = ref({
   labels: Array.from(groupedAccounts.value.keys()),
