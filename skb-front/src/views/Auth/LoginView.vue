@@ -10,7 +10,10 @@
           type="password"
       />
     </n-space>
-    {{ loginError }}
+
+    <div v-if="loginError" class="mt-3 text-danger">
+      {{ loginError }}
+    </div>
 
     <n-button
         :disabled="!(loginData.login && loginData.password)"
