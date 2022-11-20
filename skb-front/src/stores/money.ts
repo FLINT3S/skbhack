@@ -197,7 +197,7 @@ export const useMoneyStore = defineStore('money', () => {
   const groupedAccounts = computed(() => {
     const grouped = new Map<string, Account[]>()
 
-    accounts.value.forEach(account => {
+    cUser.value?.accounts?.forEach(account => {
       const key = account.currency.ticker
       const group = grouped.get(key) || []
       group.push(account)

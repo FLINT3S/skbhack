@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
     BalanceChart: typeof import('./src/components/BalanceChart.vue')['default']
     ColorBalance: typeof import('./src/components/ColorBalance.vue')['default']
     CurrencyIndicator: typeof import('./src/components/CurrencyIndicator.vue')['default']
+    HistoryList: typeof import('./src/components/HistoryList.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']

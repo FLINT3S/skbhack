@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import {createRouter, createWebHashHistory} from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import MainLayout from "../layout/MainLayout.vue";
 
@@ -58,6 +58,14 @@ const router = createRouter({
       path: "/admin",
       name: "admin",
       component: () => import("../views/AdminPanelView.vue"),
+      meta: {
+        layout: MainLayout,
+      }
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      component: () => import("../views/ProfileView.vue"),
       meta: {
         layout: MainLayout,
       }

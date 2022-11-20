@@ -16,7 +16,7 @@
           </router-link>
           <div class="col-lg-8 d-none d-lg-flex justify-content-center">
             <currency-indicator
-                v-for="c in currencies"
+                v-for="c in currenciesTopList"
                 :currency-symbol="c.symbol"
                 :growth="c.growth"
                 :title="c.ticker"
@@ -63,9 +63,9 @@
                   <n-list hoverable>
                     <n-list-item>
                       <div class="d-flex justify-content-center flex-wrap">
-                        <n-avatar :size="60" circle></n-avatar>
+                        <n-avatar :size="60" circle :src="`https://icotar.com/initials/${cUser.fullName}?fg=da5155&bg=f2f2f2`"></n-avatar>
                         <div class="ms-4 my-auto">
-                          <n-h2 class="fw-bold mb-1">{{ cUser.fullName }}</n-h2>
+                          <n-h2 class="fw-bold mb-1">{{ cUser.firstname }}</n-h2>
                           <span class="mt-1 text-secondary">Перейти в профиль</span>
                         </div>
                         <div class="material-icons-round my-auto ms-auto goto-profile">
@@ -183,6 +183,10 @@ const onClickSubmitCreateAccount = () => {
     })
   }
 }
+
+const currenciesTopList = computed(() => {
+  return currencies.value.slice(1, 5)
+})
 </script>
 
 <style lang="scss" scoped>
