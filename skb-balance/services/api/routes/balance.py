@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from pycbrf import ExchangeRates
 from sqlmodel import Session, select
 from starlette import status
 from starlette.responses import Response, JSONResponse
@@ -86,6 +87,7 @@ async def get_account_history(user_id: UUID, session: Session = Depends(get_sess
     response = list(map(lambda a: {
         "id": str(a.id),
         "amount": a.amount,
+        "amountUSD": a.amount * _get_currency_cost(a.currency.ticker, "USD") ** -1,
         "currency": {
             "name": a.currency.name,
             "ticker": a.currency.ticker,
@@ -94,6 +96,15 @@ async def get_account_history(user_id: UUID, session: Session = Depends(get_sess
     }, user.accounts))
 
     return JSONResponse(content=response)
+
+
+def _get_currency_cost(from_ticker: str, to_ticker: str) -> float:
+    rates = ExchangeRates()
+
+    def get_cost(ticker: str) -> float:
+        return float(1.0 if ticker == "RUB" else rates[ticker].value)
+
+    return get_cost(to_ticker) / get_cost(from_ticker)
 
 
 @balance_router.post("/changeBalance")
@@ -112,17 +123,12 @@ async def change_account_balance(change_balance_dto: ChangeBalanceDto, session: 
     return Response(status_code=status.HTTP_200_OK)
 
 
-@balance_router.get("/{user_id}")
-async def get_user_info(user_id: UUID, session: Session = Depends(get_session)):
-    user = session.exec(select(User).where(User.id == user_id)).first()
-    if user is None:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
-
-    return JSONResponse(content={
-        "id": user.id,
-        "firstname": user.firstname,
-        "surname": user.surname,
-        "login": user.login,
-        "blocked": user.blocked,
-        "verified": user.verify
-    })
+@balance_router.get("/currencies")
+async def get_currencies(session: Session = Depends(get_session)):
+    currencies = session.exec(select(Currency))
+    return JSONResponse(content=list(map(lambda c: {
+        "id": str(c.id),
+        "name": c.name,
+        "ticker": c.ticker,
+        "symbol": c.symbol,
+    }, currencies)))

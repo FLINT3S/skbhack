@@ -1,5 +1,9 @@
+from uuid import UUID
+
 import jwt
 import os
+
+from starlette.responses import JSONResponse, Response
 
 from ...database.service import get_session
 from ...database.models import User, Account, Currency
@@ -95,3 +99,19 @@ async def change_password(
     else:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Пароли не совпадают.")
+
+
+@auth_router.get("/getUser/{user_id}")
+async def get_user_info(user_id: UUID, session: Session = Depends(get_session)):
+    user = session.exec(select(User).where(User.id == user_id)).first()
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    return JSONResponse(content={
+        "id": str(user.id),
+        "firstname": user.firstname,
+        "surname": user.surname,
+        "login": user.login,
+        "blocked": user.blocked,
+        "verified": user.verify
+    })
