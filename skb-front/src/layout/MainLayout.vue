@@ -40,6 +40,23 @@
         <div class="container pb-3">
           <div class="row mt-4">
             <div class="col-12 col-lg-4">
+              <router-link
+                  class="text-decoration-none back-btn" tag="div"
+                  to="/"
+                  :class="router.currentRoute.value.path === '/' ? 'collapsed' : ''"
+              >
+                <n-card class="mb-3" size="large">
+                  <div class="d-flex align-items-center">
+                    <div class="material-icons-round">
+                      chevron_left
+                    </div>
+                    <n-h3 class="m-0">
+                      Вернуться на главную
+                    </n-h3>
+                  </div>
+                </n-card>
+              </router-link>
+
               <router-link class="text-decoration-none" tag="div" to="/profile">
                 <n-card size="small">
                   <n-list hoverable>
@@ -205,5 +222,18 @@ const onClickSubmitCreateAccount = () => {
     color: var(--accent-blue-hover);
     text-shadow: 0 0 1px rgba(15, 31, 75, 0.7);
   }
+}
+
+.back-btn {
+  height: 72px;
+  overflow: hidden;
+  transition: all .3s ease;
+  display: block;
+  margin-bottom: 24px;
+}
+
+.back-btn.collapsed {
+  height: 0!important;
+  margin: 0;
 }
 </style>
