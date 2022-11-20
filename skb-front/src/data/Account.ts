@@ -24,6 +24,6 @@ export class Account {
   }
 
   transferTo(account: Account, amount: number) {
-    return axios.post(`${API}/trading/transfer`, {from: this.id, to: account.id, amount})
+    return axios.post(`${API}/trading/transfer`, {from_id: this.id, to_id: account.id, amount})
   }
 }
