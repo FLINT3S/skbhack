@@ -46,11 +46,11 @@ def _create_transactions(
 ) -> Tuple[Transaction, Transaction]:
     currency_cost = _get_currency_cost(from_account.currency.ticker, to_account.currency.ticker)
 
-    from_account_transaction = Transaction.get_instance(from_account, -amount)
+    from_account_transaction = Transaction.get_instance(from_account, -float(amount) ** -1)
     from_account_transaction.rate = float(currency_cost) ** -1
     from_account_transaction.description = f"Перевод из {from_account.currency.ticker} в {to_account.currency.ticker}"
 
-    to_account_transaction = Transaction.get_instance(to_account, amount * float(currency_cost) ** -1)
+    to_account_transaction = Transaction.get_instance(to_account, amount * currency_cost)
     to_account_transaction.rate = currency_cost
     to_account_transaction.description = f"Перевод из {from_account.currency.ticker} в {to_account.currency.ticker}"
 
@@ -61,6 +61,6 @@ def _get_currency_cost(from_ticker: str, to_ticker: str) -> float:
     rates = ExchangeRates()
 
     def get_cost(ticker: str) -> float:
-        return float(1.0 if ticker == "RUB" else rates[ticker].value)
+        return float(1.0 if ticker == "RUB" else rates[ticker].rate)
 
     return get_cost(from_ticker) / get_cost(to_ticker)

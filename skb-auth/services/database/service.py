@@ -22,7 +22,6 @@ with Session(engine) as session:
     session.merge(Currency.get_instance(UUID("00000000-0000-0000-0000-000000000002"), "Евро", "EUR", "€"))
     session.merge(Currency.get_instance(UUID("00000000-0000-0000-0000-000000000003"), "Юань", "CNY", "¥"))
     session.merge(Currency.get_instance(UUID("00000000-0000-0000-0000-000000000004"), "Фунт стерлингов", "GBP", "£"))
-    session.merge(Currency.get_instance(UUID("00000000-0000-0000-0000-000000000005"), "Новый шекель", "ILS", "₪"))
     session.merge(Currency.get_instance(UUID("00000000-0000-0000-0000-000000000006"), "Тенге", "KZT", "₸"))
     session.commit()
 
