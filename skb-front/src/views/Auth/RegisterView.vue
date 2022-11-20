@@ -2,53 +2,75 @@
   <section>
     <span class="auth-screen-header">Регистрация</span>
 
-    <n-space vertical class="mt-5">
-      <n-input placeholder="Логин" v-model:value="registerData.email" />
+    <n-space class="mt-5" vertical>
+      <n-input v-model:value="registerData.login" placeholder="Логин"/>
+      <n-input v-model:value="registerData.firstname" placeholder="Имя"/>
+      <n-input v-model:value="registerData.surname" placeholder="Фамилия"/>
       <n-input
-        v-model:value="registerData.password"
-        placeholder="Пароль"
-        type="password"
+          v-model:value="registerData.password"
+          placeholder="Пароль"
+          type="password"
+          show-password-on="click"
       />
       <n-input
-        v-model:value="registerData.passwordConfirmation"
-        placeholder="Ещё раз пароль"
-        type="password"
+          v-model:value="registerData.passwordConfirmation"
+          placeholder="Ещё раз пароль"
+          type="password"
+          show-password-on="click"
       />
     </n-space>
+    <div
+        class="mt-3 text-danger"
+        v-if="registerError"
+    >
+      {{ registerError }}
+    </div>
 
     <n-button
-      block
-      type="primary"
-      round
-      size="large"
-      class="button-enter"
-      :disabled="
+        :disabled="
         !(
-          registerData.email &&
+          registerData.login &&
           registerData.password &&
-          registerData.passwordConfirmation
+          registerData.passwordConfirmation &&
+          registerData.firstname &&
+          registerData.surname &&
+          registerData.password === registerData.passwordConfirmation
         )
       "
-      @click="onClickSubmitRegister"
+        block
+        class="button-enter"
+        round
+        size="large"
+        type="primary"
+        @click="onClickSubmitRegister"
     >
       Зарегистрироваться
     </n-button>
 
-    <router-link to="/auth/login" class="sub-action-auth mt-4 d-block">
+    <router-link class="sub-action-auth mt-4 d-block" to="/auth/login">
       Войти
     </router-link>
   </section>
 </template>
 
-<script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useAuthStore } from "../../stores/auth";
+<script lang="ts" setup>
+import {storeToRefs} from "pinia";
+import {useAuthStore} from "../../stores/auth";
+import {useRouter} from "vue-router";
 
-const { registerData } = storeToRefs(useAuthStore());
-const { submitRegister } = useAuthStore();
+const {registerData} = storeToRefs(useAuthStore());
+const {submitRegister} = useAuthStore();
+
+const router = useRouter();
+
+const registerError = ref("");
 
 const onClickSubmitRegister = () => {
-  submitRegister();
+  submitRegister().then(() => {
+    router.replace("/");
+  }).catch((e) => {
+    registerError.value = e
+  });
 };
 </script>
 

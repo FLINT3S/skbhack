@@ -1,5 +1,7 @@
 export class RegisterData {
-  email: string = "";
+  login: string = "";
   password: string = "";
   passwordConfirmation: string = "";
+  firstname: string = "";
+  surname: string = "";
 }

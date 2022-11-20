@@ -39,7 +39,7 @@ const requirements = ref([
   { title: "Регистрация и аторизация пользователя", completed: true },
   {
     title: "Функционал подтверждения регистрации для администратора приложения",
-    completed: false,
+    completed: true,
   },
   { title: "Функционал для блокировки пользователей", completed: false },
   {
