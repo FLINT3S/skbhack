@@ -87,7 +87,7 @@ async def get_account_history(user_id: UUID, session: Session = Depends(get_sess
     response = list(map(lambda a: {
         "id": str(a.id),
         "amount": a.amount,
-        "amountUSD": a.amount * _get_currency_cost(a.currency.ticker, "USD") ** -1,
+        "amountUSD": a.amount * _get_currency_cost(a.currency.ticker, "USD"),
         "currency": {
             "name": a.currency.name,
             "ticker": a.currency.ticker,
