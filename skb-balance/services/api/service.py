@@ -11,12 +11,16 @@ class APIService:
             title="API",
         )
 
+        #TODO убрать *
+        origins = ["*"]
         self.app.add_middleware(
             CORSMiddleware,
+            allow_origins=origins,
             allow_credentials=True,
             allow_methods=[""],
             allow_headers=[""],
         )
+
 
         self.attach_routes()
 
