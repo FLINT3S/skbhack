@@ -8,13 +8,11 @@
     <transition mode="out-in" name="fade">
       <component :is="layout">
         <n-message-provider>
-          <n-dialog-provider>
-            <router-view v-slot="{ Component }">
-              <transition mode="out-in" name="fade">
-                <component :is="Component"/>
-              </transition>
-            </router-view>
-          </n-dialog-provider>
+          <router-view v-slot="{ Component }">
+            <transition mode="out-in" name="fade">
+              <component :is="Component"/>
+            </transition>
+          </router-view>
         </n-message-provider>
       </component>
     </transition>
@@ -27,6 +25,10 @@ import {useRoute} from "vue-router";
 import EmptyLayout from "./layout/EmptyLayout.vue";
 import {computed} from "vue";
 import themeOverrides from "./assets/styles/theme/naive-ui-theme-overrides.json";
+import {parseJwt} from "./utils/other";
+
+const token = localStorage.getItem("token") || "";
+const user = parseJwt(token);
 
 const route = useRoute();
 const layout = computed(() => {

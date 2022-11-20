@@ -1,4 +1,4 @@
 export class LoginData {
-  email: string = "";
+  login: string = "";
   password: string = "";
 }
