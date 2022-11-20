@@ -86,10 +86,11 @@ async def get_account_history(user_id: UUID, session: Session = Depends(get_sess
     if user is None:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
 
+    rates = ExchangeRates()
     response = list(map(lambda a: {
         "id": str(a.id),
         "amount": a.amount,
-        "amountUSD": a.amount * _get_currency_cost(a.currency.ticker, "USD"),
+        "amountUSD": a.amount * _get_currency_cost(rates, a.currency.ticker, "USD"),
         "currency": {
             "name": a.currency.name,
             "ticker": a.currency.ticker,
@@ -100,9 +101,7 @@ async def get_account_history(user_id: UUID, session: Session = Depends(get_sess
     return JSONResponse(content=response)
 
 
-def _get_currency_cost(from_ticker: str, to_ticker: str) -> float:
-    rates = ExchangeRates()
-
+def _get_currency_cost(rates: ExchangeRates, from_ticker: str, to_ticker: str) -> float:
     def get_cost(ticker: str) -> float:
         return float(1.0 if ticker == "RUB" else rates[ticker].rate)
 
@@ -141,7 +140,7 @@ async def get_currencies(session: Session = Depends(get_session)):
         "name": c.name,
         "ticker": c.ticker,
         "symbol": c.symbol,
-        "rate": _get_currency_cost(c.ticker, "RUB"),
+        "rate": _get_currency_cost(current_rates, c.ticker, "RUB"),
         "growth": _is_falling(current_rates, previous_rates, c.ticker, "RUB")
     }, currencies)))
 
