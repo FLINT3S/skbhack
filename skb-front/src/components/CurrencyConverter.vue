@@ -106,7 +106,7 @@ const from = computed(() => currencies.value.find(c => c.id === fromCurrency.val
 const to = computed(() => currencies.value.find(c => c.id === toCurrency.value))
 
 const fromAccount = computed(() => cUser.value?.accounts?.find(a => a.currency.ticker === from.value!.ticker))
-const fromAccountBalance = computed(() => fromAccount.value?.amount)
+const fromAccountBalance = computed(() => fromAccount.value?.amount!)
 
 
 const rate = computed(() => {

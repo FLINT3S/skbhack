@@ -62,7 +62,7 @@ import {formatMoney, removeSigns} from "../utils/strings";
 import {useMoneyStore} from "../stores/money";
 import type {Ref} from "vue";
 import type {Currency} from "../data/Currency";
-import HistoryList from "@/components/HistoryList.vue";
+import HistoryList from "../components/HistoryList.vue";
 import axios from "axios";
 import {API} from "../utils/constants";
 
