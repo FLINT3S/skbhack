@@ -2,42 +2,54 @@
   <section>
     <span class="auth-screen-header">Вход</span>
 
-    <n-space vertical class="mt-5">
-      <n-input placeholder="Логин" v-model:value="loginData.email" />
+    <n-space class="mt-5" vertical>
+      <n-input v-model:value="loginData.login" placeholder="Логин"/>
       <n-input
-        v-model:value="loginData.password"
-        placeholder="Пароль"
-        type="password"
+          v-model:value="loginData.password"
+          placeholder="Пароль"
+          type="password"
       />
     </n-space>
+    {{ loginError }}
 
     <n-button
-      block
-      type="primary"
-      round
-      size="large"
-      class="button-enter"
-      :disabled="!(loginData.email && loginData.password)"
-      @click="onClickSubmitLogin"
+        :disabled="!(loginData.login && loginData.password)"
+        block
+        class="button-enter"
+        round
+        size="large"
+        type="primary"
+        @click="onClickSubmitLogin"
     >
       Войти
     </n-button>
 
-    <router-link to="/auth/register" class="sub-action-auth mt-4 d-block">
+    <router-link class="sub-action-auth mt-4 d-block" to="/auth/register">
       Зарегистрироваться
     </router-link>
   </section>
 </template>
 
-<script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useAuthStore } from "../../stores/auth";
+<script lang="ts" setup>
+import {storeToRefs} from "pinia";
+import {useAuthStore} from "../../stores/auth";
+import {useRouter} from "vue-router";
 
-const { loginData } = storeToRefs(useAuthStore());
-const { submitLogin } = useAuthStore();
+const {loginData} = storeToRefs(useAuthStore());
+const {submitLogin} = useAuthStore();
+
+const router = useRouter();
+const loginError = ref("");
 
 const onClickSubmitLogin = () => {
-  submitLogin();
+  submitLogin()
+      .then(() => {
+        router.replace("/")
+      })
+      .catch((e) => {
+        console.log(e)
+        loginError.value = e;
+      });
 };
 </script>
 

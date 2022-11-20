@@ -38,5 +38,11 @@
     "paddingMedium": "0 20px",
     "paddingLarge": "0 28px",
     "paddingRoundLarge": "0 32px"
+  },
+  "Tabs": {
+    "colorSegment": "rgb(247, 247, 250)",
+    "tabColorSegment": "#DA5155FF",
+    "tabTextColorSegment": "rgb(31, 34, 37)",
+    "tabTextColorActiveSegment": "rgba(255, 255, 255, 1)"
   }
 }

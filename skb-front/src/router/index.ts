@@ -44,6 +44,14 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: "/admin",
+      name: "admin",
+      component: () => import("../views/AdminPanelView.vue"),
+      meta: {
+        layout: MainLayout,
+      }
+    }
   ],
 });
 
