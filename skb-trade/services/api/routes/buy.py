@@ -105,10 +105,10 @@ def get_history(ticker: str):
     response = []
     for i in range(14):
         current_rates = ExchangeRates(date)
-        response += {
+        response.append({
             "day": int(round(date.timestamp())),
-            "rate": float(current_rates[ticker].rate)
-        }
+            "rate": 1.0 if ticker == "RUB" else float(current_rates[ticker].rate)
+        })
         date -= timedelta(days=1)
 
     return JSONResponse(content=response)
