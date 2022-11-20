@@ -1,8 +1,14 @@
 <template>
   <section>
     <n-card>
-      Привет! Мы команда FLINT3S, разработавшая это приложение в рамках хакатона "Sovcombank Team Challenge 2022"
-      <br>
+      <div class="text-center">
+        Привет! Мы команда FLINT3S, разработавшая это приложение в рамках хакатона "Sovcombank Team Challenge 2022"
+        <br>
+        <br>
+        <div class="fw-bold">
+          Подписывайтесь, ставьте лайки - <a href="https://vk.com/ftitdev">vk.com/ftitdev</a>
+        </div>
+      </div>
 
     </n-card>
 
