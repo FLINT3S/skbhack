@@ -19,7 +19,8 @@ async def not_verified_users(
         request: Request,
         session: Session = Depends(get_session)
 ):
-    return session.exec(select(User).where(not User.verify)).all()
+
+    return session.exec(select(User).where(User.verify == False)).all()
 
 
 @admin_router.get("/verified_users")
@@ -47,6 +48,7 @@ async def verify_user(
 
 
 @admin_router.post("/dismiss_user")
+@admin_required
 async def verify_user(
         login_dto: LoginDto,
         session: Session = Depends(get_session)
@@ -73,7 +75,7 @@ async def block_user(
 
         session.add(user)
         session.commit()
-
+        
     return status.HTTP_200_OK
 
 
