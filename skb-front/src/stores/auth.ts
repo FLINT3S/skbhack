@@ -34,6 +34,16 @@ export const useAuthStore = defineStore("auth", () => {
           resolve(response.data);
         })
         .catch((error) => {
+          if (error?.response?.status === 401) {
+            reject("VERIFY");
+            return;
+          }
+
+          if (error?.response?.status === 403) {
+            reject("BLOCK");
+            return;
+          }
+
           if (error?.response?.data?.detail) {
             reject(error?.response?.data?.detail);
             return
@@ -41,12 +51,6 @@ export const useAuthStore = defineStore("auth", () => {
 
           switch (error.code) {
             case 400:
-              reject("Неверный логин или пароль")
-              break
-            case 401:
-              reject("Неверный логин или пароль")
-              break
-            case 403:
               reject("Неверный логин или пароль")
               break
             case 404:

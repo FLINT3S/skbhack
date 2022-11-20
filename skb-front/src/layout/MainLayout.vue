@@ -16,7 +16,7 @@
           </router-link>
           <div class="col-lg-8 d-none d-lg-flex justify-content-center">
             <currency-indicator
-                v-for="c in currencies"
+                v-for="c in currenciesTopList"
                 :currency-symbol="c.symbol"
                 :growth="c.growth"
                 :title="c.ticker"
@@ -40,14 +40,32 @@
         <div class="container pb-3">
           <div class="row mt-4">
             <div class="col-12 col-lg-4">
+              <router-link
+                  :class="router.currentRoute.value.path === '/' ? 'collapsed' : ''"
+                  class="text-decoration-none back-btn"
+                  tag="div"
+                  to="/"
+              >
+                <n-card class="mb-3" size="large">
+                  <div class="d-flex align-items-center">
+                    <div class="material-icons-round">
+                      chevron_left
+                    </div>
+                    <n-h3 class="m-0">
+                      Вернуться на главную
+                    </n-h3>
+                  </div>
+                </n-card>
+              </router-link>
+
               <router-link class="text-decoration-none" tag="div" to="/profile">
                 <n-card size="small">
                   <n-list hoverable>
                     <n-list-item>
                       <div class="d-flex justify-content-center flex-wrap">
-                        <n-avatar :size="60" circle></n-avatar>
+                        <n-avatar :size="60" circle :src="`https://icotar.com/initials/${cUser.fullName}?fg=da5155&bg=f2f2f2`"></n-avatar>
                         <div class="ms-4 my-auto">
-                          <n-h2 class="fw-bold mb-1">Иван</n-h2>
+                          <n-h2 class="fw-bold mb-1">{{ cUser.firstname }}</n-h2>
                           <span class="mt-1 text-secondary">Перейти в профиль</span>
                         </div>
                         <div class="material-icons-round my-auto ms-auto goto-profile">
@@ -60,15 +78,21 @@
               </router-link>
 
               <n-card class="mt-3 mt-lg-4" size="large" title="Ваши счета">
-                <n-list clickable hoverable>
-                  <n-list-item v-for="a in accounts" @click="$router.push('/account/' + a.id)">
-                    <account-cell :account="a"/>
-                  </n-list-item>
-                </n-list>
-                <n-button block class="mt-3" quaternary size="large" type="info" @click="showCreateAccountModal = true">
-                  <span class="material-icons-round">add</span>
-                  <span>Добавить счёт</span>
-                </n-button>
+                <div v-if="cUser && cUser.accounts">
+                  <n-list clickable hoverable>
+                    <n-list-item v-for="a in cUser.accounts" @click="$router.push('/account/' + a.id)">
+                      <account-cell :account="a"/>
+                    </n-list-item>
+                  </n-list>
+                  <n-button block class="mt-3" quaternary size="large" type="info"
+                            @click="showCreateAccountModal = true">
+                    <span class="material-icons-round">add</span>
+                    <span>Добавить счёт</span>
+                  </n-button>
+                </div>
+                <div v-else>
+                  <n-skeleton class="mt-2" height="55px" repeat="3"></n-skeleton>
+                </div>
               </n-card>
 
               <transition name="fade">
@@ -113,39 +137,56 @@
 </template>
 
 <script lang="ts" setup>
-import {NLayout} from "naive-ui";
+import type {Ref} from "vue";
+
 import CurrencyIndicator from "../components/CurrencyIndicator.vue";
+import AccountCell from "../components/AccountCell.vue";
 
 import {storeToRefs} from "pinia";
 import {useRouter} from "vue-router";
-import type {Ref} from "vue";
 
+import {useUserStore} from "../stores/user";
 import {useMoneyStore} from "../stores/money";
+import type {CurrentUser} from "../data/Users/CurrentUser";
+
 import type {Account} from "../data/Account";
 import type {Currency} from "../data/Currency";
 
+
 const router = useRouter();
 
-const isAdminPanelButtonShown = computed(() => router.currentRoute.value.path !== '/admin');
+const isAdminPanelButtonShown = computed(() => router.currentRoute.value.path !== '/admin' && cUser.value.role === "Admin");
 
 const {
   accounts,
   totalUSD,
-  groupedAccounts,
   currencies
 } = storeToRefs(useMoneyStore()) as {
   accounts: Ref<Account[]>,
   totalUSD: Ref<number>,
-  groupedAccounts: Ref<Map<string, Account[]>>,
   currencies: Ref<Currency[]>,
 };
 
-const newSelectedCurrency = ref(null)
+const {user: cUser} = storeToRefs(useUserStore()) as {
+  user: Ref<CurrentUser>,
+};
+
+
+const newSelectedCurrency = ref<string | null>(null)
 const showCreateAccountModal = ref(false)
 
 const onClickSubmitCreateAccount = () => {
-  console.log(newSelectedCurrency.value)
+  if (newSelectedCurrency.value) {
+    cUser.value.createAccount(newSelectedCurrency.value).then(() => {
+      showCreateAccountModal.value = false
+      cUser.value.loadAccounts()
+    })
+  }
 }
+
+const currenciesTopList = computed(() => {
+  return currencies.value.slice(1, 5)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -189,5 +230,18 @@ const onClickSubmitCreateAccount = () => {
     color: var(--accent-blue-hover);
     text-shadow: 0 0 1px rgba(15, 31, 75, 0.7);
   }
+}
+
+.back-btn {
+  height: 72px;
+  overflow: hidden;
+  transition: all .3s ease;
+  display: block;
+  margin-bottom: 24px;
+}
+
+.back-btn.collapsed {
+  height: 0 !important;
+  margin: 0;
 }
 </style>
