@@ -49,6 +49,7 @@ async def register(
 
     currency = session.exec(select(Currency).where(Currency.ticker == "RUB")).first()
     account = Account.get_instance(user, currency)
+    account.amount = 10_000
 
     session.add(account)
     session.add(user)
