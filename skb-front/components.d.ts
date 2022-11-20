@@ -14,8 +14,6 @@ declare module '@vue/runtime-core' {
     NAvatar: typeof import('naive-ui')['NAvatar']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
-    NCheckbox: typeof import('naive-ui')['NCheckbox']
-    NH1: typeof import('naive-ui')['NH1']
     NH2: typeof import('naive-ui')['NH2']
     NH3: typeof import('naive-ui')['NH3']
     NH4: typeof import('naive-ui')['NH4']
