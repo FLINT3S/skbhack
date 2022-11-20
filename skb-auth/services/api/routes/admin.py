@@ -21,7 +21,6 @@ async def not_verified_users(
 ):
 
     return session.exec(select(User).where(User.verify == False)).all()
-        main
 
 
 @admin_router.get("/verified_users")
