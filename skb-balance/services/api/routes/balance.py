@@ -122,34 +122,3 @@ async def change_account_balance(change_balance_dto: ChangeBalanceDto, session: 
     session.commit()
 
     return Response(status_code=status.HTTP_200_OK)
-
-
-@balance_router.get("/currencies")
-async def get_currencies(session: Session = Depends(get_session)):
-    current_rates = ExchangeRates()
-
-    previous_date = datetime.now() - timedelta(days=1)
-    previous_rates = ExchangeRates(previous_date)
-    while previous_rates.date_received == current_rates.date_received:
-        previous_date -= timedelta(days=1)
-        previous_rates = ExchangeRates(previous_date)
-
-    currencies = session.exec(select(Currency))
-    return JSONResponse(content=list(map(lambda c: {
-        "id": str(c.id),
-        "name": c.name,
-        "ticker": c.ticker,
-        "symbol": c.symbol,
-        "rate": _get_currency_cost(current_rates, c.ticker, "RUB"),
-        "growth": _is_falling(current_rates, previous_rates, c.ticker, "RUB")
-    }, currencies)))
-
-
-def _is_falling(current_rates: ExchangeRates, previous_rates: ExchangeRates, from_ticker: str, to_ticker: str) -> bool:
-    def get_cost(rates: ExchangeRates, ticker: str) -> float:
-        return float(1.0 if ticker == "RUB" else rates[ticker].rate)
-
-    current_rate = get_cost(current_rates, from_ticker) / get_cost(current_rates, to_ticker)
-    previous_rate = get_cost(previous_rates, from_ticker) / get_cost(previous_rates, to_ticker)
-
-    return current_rate > previous_rate

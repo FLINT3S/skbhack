@@ -1,10 +1,11 @@
+from datetime import timedelta
 from typing import Tuple
 
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from pycbrf import ExchangeRates
 from starlette import status
-from starlette.responses import Response
+from starlette.responses import Response, JSONResponse
 
 from ...database.models import *
 from ...database.service import get_session
@@ -44,7 +45,8 @@ def _create_transactions(
         to_account: Account,
         amount: float
 ) -> Tuple[Transaction, Transaction]:
-    currency_cost = _get_currency_cost(from_account.currency.ticker, to_account.currency.ticker)
+    current_rates = ExchangeRates()
+    currency_cost = _get_currency_cost(current_rates, from_account.currency.ticker, to_account.currency.ticker)
 
     from_account_transaction = Transaction.get_instance(from_account, -float(amount) ** -1)
     from_account_transaction.rate = float(currency_cost) ** -1
@@ -57,10 +59,39 @@ def _create_transactions(
     return from_account_transaction, to_account_transaction
 
 
-def _get_currency_cost(from_ticker: str, to_ticker: str) -> float:
-    rates = ExchangeRates()
-
+def _get_currency_cost(rates: ExchangeRates, from_ticker: str, to_ticker: str) -> float:
     def get_cost(ticker: str) -> float:
         return float(1.0 if ticker == "RUB" else rates[ticker].rate)
 
     return get_cost(from_ticker) / get_cost(to_ticker)
+
+
+@buy_router.get("/currencies")
+async def get_currencies(session: Session = Depends(get_session)):
+    current_rates = ExchangeRates()
+
+    previous_date = datetime.now() - timedelta(days=1)
+    previous_rates = ExchangeRates(previous_date)
+    while previous_rates.date_received == current_rates.date_received:
+        previous_date -= timedelta(days=1)
+        previous_rates = ExchangeRates(previous_date)
+
+    currencies = session.exec(select(Currency))
+    return JSONResponse(content=list(map(lambda c: {
+        "id": str(c.id),
+        "name": c.name,
+        "ticker": c.ticker,
+        "symbol": c.symbol,
+        "rate": _get_currency_cost(current_rates, c.ticker, "RUB"),
+        "growth": _is_falling(current_rates, previous_rates, c.ticker, "RUB")
+    }, currencies)))
+
+
+def _is_falling(current_rates: ExchangeRates, previous_rates: ExchangeRates, from_ticker: str, to_ticker: str) -> bool:
+    def get_cost(rates: ExchangeRates, ticker: str) -> float:
+        return float(1.0 if ticker == "RUB" else rates[ticker].rate)
+
+    current_rate = get_cost(current_rates, from_ticker) / get_cost(current_rates, to_ticker)
+    previous_rate = get_cost(previous_rates, from_ticker) / get_cost(previous_rates, to_ticker)
+
+    return current_rate > previous_rate
