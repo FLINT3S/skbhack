@@ -32,7 +32,7 @@ async def transfer_currency(transfer_dto: TransferDto, session: Session = Depend
     transactions = _create_transactions(from_account, to_account, transfer_dto.amount)
 
     from_account.amount -= transfer_dto.amount
-    to_account.amount += transfer_dto.amount * transactions[1].rate
+    to_account.amount += transfer_dto.amount * transactions[0].rate
 
     session.add_all(transactions)
     session.add(from_account)
@@ -50,12 +50,12 @@ def _create_transactions(
     current_rates = ExchangeRates()
     currency_cost = _get_currency_cost(current_rates, from_account.currency.ticker, to_account.currency.ticker)
 
-    from_account_transaction = Transaction.get_instance(from_account, float(amount) * currency_cost)
-    from_account_transaction.rate = float(currency_cost) ** -1
+    from_account_transaction = Transaction.get_instance(from_account, amount)
+    from_account_transaction.rate = currency_cost
     from_account_transaction.description = f"Перевод из {from_account.currency.ticker} в {to_account.currency.ticker}"
 
-    to_account_transaction = Transaction.get_instance(to_account, -amount)
-    to_account_transaction.rate = currency_cost
+    to_account_transaction = Transaction.get_instance(to_account, -float(amount) * currency_cost)
+    to_account_transaction.rate = float(currency_cost) ** -1
     to_account_transaction.description = f"Перевод из {from_account.currency.ticker} в {to_account.currency.ticker}"
 
     return from_account_transaction, to_account_transaction
