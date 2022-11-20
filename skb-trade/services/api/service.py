@@ -1,4 +1,5 @@
 from fastapi import APIRouter, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .routes import buy_router
 
@@ -8,6 +9,13 @@ class APIService:
         self.debug = True
         self.app = FastAPI(
             title="API",
+        )
+
+        self.app.add_middleware(
+            CORSMiddleware,
+            allow_credentials=True,
+            allow_methods=[""],
+            allow_headers=[""],
         )
 
         self.attach_routes()
