@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <n-h1 class="text-center">
+    <n-h1 class="text-center" v-if="fromValue">
       {{ fromValue || 1 }} {{ from?.ticker }} = {{ ((fromValue || 1) * rate).toFixed(2) }} {{ to?.ticker }}
     </n-h1>
 
@@ -57,6 +57,10 @@
     >
       Конвертировать
     </n-button>
+
+    <span v-if="fromAmount < fromValue" class="text-danger">
+      Недостаточно средств на счете!
+    </span>
   </n-card>
 </template>
 
@@ -96,6 +100,9 @@ const toCurrencies = computed(() => currencies.value
 
 const from = computed(() => currencies.value.find(c => c.id === fromCurrency.value))
 const to = computed(() => currencies.value.find(c => c.id === toCurrency.value))
+
+const fromAccount = computed(() => cUser.value?.accounts.find(a => a.currency.ticker === from.value!.ticker))
+const fromAmount = computed(() => fromAccount.value?.amount!)
 
 const rate = computed(() => {
   const from = currencies.value.find(c => c.id === fromCurrency.value)
