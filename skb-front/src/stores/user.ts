@@ -1,8 +1,9 @@
 import {defineStore} from "pinia";
+import type {CurrentUser} from "../data/Users/CurrentUser";
 
 export const useUserStore = defineStore('user', () => {
-  const token = ref<null | string>(null);
-  const user = ref(null);
+  const token = ref<string | null>(null);
+  const user = ref<CurrentUser | null>(null);
 
   return {
     token,

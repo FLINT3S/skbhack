@@ -82,12 +82,14 @@ import type {Ref} from "vue";
 import BalanceChart from "../components/BalanceChart.vue";
 import ColorBalance from "../components/ColorBalance.vue";
 
+import {getDayAndMonth} from "../utils/strings";
+
 import {useMoneyStore} from "../stores/money";
+import {useUserStore} from "../stores/user";
+
 import type {Account} from "../data/Account";
 import type {Currency} from "../data/Currency";
 import type {TransactionsData} from "../data/Transaction";
-
-import {getDayAndMonth} from "../utils/strings";
 
 
 const {
@@ -103,6 +105,8 @@ const {
   currencies: Ref<Currency[]>,
   transactionsData: Ref<TransactionsData[]>
 };
+
+const {user: currentUser} = storeToRefs(useUserStore())
 
 const chartData = ref({
   labels: Array.from(groupedAccounts.value.keys()),

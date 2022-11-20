@@ -42,6 +42,16 @@ const router = createRouter({
           name: "logout",
           component: () => import("../views/Auth/LogoutView.vue"),
         },
+        {
+          path: "verify",
+          name: "verify",
+          component: () => import("../views/Auth/VerifyView.vue"),
+        },
+        {
+          path: "block",
+          name: "block",
+          component: () => import("../views/Auth/BlockView.vue"),
+        }
       ],
     },
     {

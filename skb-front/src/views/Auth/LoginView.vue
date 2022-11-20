@@ -50,8 +50,13 @@ const onClickSubmitLogin = () => {
         router.replace("/")
       })
       .catch((e) => {
-        console.log(e)
-        loginError.value = e;
+        if (e === "VERIFY") {
+          router.replace("/auth/verify");
+        } else if (e === "BLOCK") {
+          router.replace("/auth/block");
+        } else {
+          loginError.value = e;
+        }
       });
 };
 </script>

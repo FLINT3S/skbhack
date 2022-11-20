@@ -47,7 +47,7 @@
                       <div class="d-flex justify-content-center flex-wrap">
                         <n-avatar :size="60" circle></n-avatar>
                         <div class="ms-4 my-auto">
-                          <n-h2 class="fw-bold mb-1">Иван</n-h2>
+                          <n-h2 class="fw-bold mb-1">{{ cUser.fullName }}</n-h2>
                           <span class="mt-1 text-secondary">Перейти в профиль</span>
                         </div>
                         <div class="material-icons-round my-auto ms-auto goto-profile">
@@ -60,15 +60,21 @@
               </router-link>
 
               <n-card class="mt-3 mt-lg-4" size="large" title="Ваши счета">
-                <n-list clickable hoverable>
-                  <n-list-item v-for="a in accounts" @click="$router.push('/account/' + a.id)">
-                    <account-cell :account="a"/>
-                  </n-list-item>
-                </n-list>
-                <n-button block class="mt-3" quaternary size="large" type="info" @click="showCreateAccountModal = true">
-                  <span class="material-icons-round">add</span>
-                  <span>Добавить счёт</span>
-                </n-button>
+                <div v-if="cUser && cUser.accounts">
+                  <n-list clickable hoverable>
+                    <n-list-item v-for="a in cUser.accounts" @click="$router.push('/account/' + a.id)">
+                      <account-cell :account="a"/>
+                    </n-list-item>
+                  </n-list>
+                  <n-button block class="mt-3" quaternary size="large" type="info"
+                            @click="showCreateAccountModal = true">
+                    <span class="material-icons-round">add</span>
+                    <span>Добавить счёт</span>
+                  </n-button>
+                </div>
+                <div v-else>
+                  <n-skeleton class="mt-2" height="55px" repeat="3"></n-skeleton>
+                </div>
               </n-card>
 
               <transition name="fade">
@@ -113,20 +119,25 @@
 </template>
 
 <script lang="ts" setup>
-import {NLayout} from "naive-ui";
+import type {Ref} from "vue";
+
 import CurrencyIndicator from "../components/CurrencyIndicator.vue";
+import AccountCell from "../components/AccountCell.vue";
 
 import {storeToRefs} from "pinia";
 import {useRouter} from "vue-router";
-import type {Ref} from "vue";
 
+import {useUserStore} from "../stores/user";
 import {useMoneyStore} from "../stores/money";
+import {CurrentUser} from "../data/Users/CurrentUser";
+
 import type {Account} from "../data/Account";
 import type {Currency} from "../data/Currency";
 
+
 const router = useRouter();
 
-const isAdminPanelButtonShown = computed(() => router.currentRoute.value.path !== '/admin');
+const isAdminPanelButtonShown = computed(() => router.currentRoute.value.path !== '/admin' && cUser.value.role === "Admin");
 
 const {
   accounts,
@@ -139,6 +150,11 @@ const {
   groupedAccounts: Ref<Map<string, Account[]>>,
   currencies: Ref<Currency[]>,
 };
+
+const {user: cUser} = storeToRefs(useUserStore()) as {
+  user: Ref<CurrentUser>,
+};
+
 
 const newSelectedCurrency = ref(null)
 const showCreateAccountModal = ref(false)
