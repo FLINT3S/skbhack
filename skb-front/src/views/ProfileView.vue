@@ -25,13 +25,15 @@
 </template>
 
 <script lang="ts" setup>
-import {Ref} from "vue";
+import HistoryList from "../components/HistoryList.vue";
+
 import {storeToRefs} from "pinia";
 import {useUserStore} from "../stores/user";
-import {CurrentUser} from "../data/Users/CurrentUser";
-import HistoryList from "../components/HistoryList.vue";
 import {useMoneyStore} from "../stores/money";
-import {TransactionsData} from "../data/Transaction";
+
+import type {Ref} from "vue";
+import type {CurrentUser} from "../data/Users/CurrentUser";
+import type {TransactionsData} from "../data/Transaction";
 
 const {user: cUser} = storeToRefs(useUserStore()) as {
   user: Ref<CurrentUser>,
