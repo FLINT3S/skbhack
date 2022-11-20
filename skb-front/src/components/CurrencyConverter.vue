@@ -28,7 +28,7 @@
         <n-input
             :disabled="!fromCurrency"
             :suffix="fromCurrency"
-            :value="((fromValue || '') * rate).toFixed(2)"
+            :value="toValue"
             readonly
             type="number"
         />
@@ -43,7 +43,7 @@
     </div>
 
     <n-h1 class="text-center">
-      {{ fromValue || 1 }} {{ from.ticker }} = {{ ((fromValue || 1) * rate).toFixed(2) }} {{ to.ticker }}
+      {{ fromValue || 1 }} {{ from?.ticker }} = {{ ((fromValue || 1) * rate).toFixed(2) }} {{ to?.ticker }}
     </n-h1>
 
     <n-button
@@ -74,6 +74,11 @@ const {currencies} = storeToRefs(useMoneyStore()) as { currencies: Ref<Currency[
 const fromCurrency = ref<string | null>(null)
 const toCurrency = ref<string | null>(null)
 const fromValue = ref(0)
+
+const toValue = computed(() => {
+  if (!fromValue) return ""
+  return (fromValue.value * rate.value).toFixed(2)
+})
 
 const fromCurrencies = computed(() => currencies.value
     .filter(c => cUser.value?.accounts
