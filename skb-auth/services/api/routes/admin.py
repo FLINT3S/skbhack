@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlmodel import Session, select
 
 from starlette import status
@@ -6,32 +6,35 @@ from starlette import status
 from ...database.service import get_session
 from ...database.models import User, Role
 
+from ..jwt_auth import auth_required, admin_required
+
 from .dtos import *
 
 admin_router = APIRouter()
 
 
-#  @admin_required
 @admin_router.get("/not_verified_users")
+@admin_required
 async def not_verified_users(
+        request: Request,
         session: Session = Depends(get_session)
 ):
-    print(session.exec(select(User).where(not User.verify)).all())
     return session.exec(select(User).where(not User.verify)).all()
 
 
-#  @admin_required
 @admin_router.get("/verified_users")
+@admin_required
 async def verified_users(
+        request: Request,
         session: Session = Depends(get_session)
 ):
-    print(session.exec(select(User).where(not User.verify)).first())
-    return session.exec(select(User).where(User.verify))
+    return session.exec(select(User).where(User.verify)).all()
 
 
-#  @admin_required
 @admin_router.post("/verify_user")
+@admin_required
 async def verify_user(
+        request: Request,
         login_dto: LoginDto,
         session: Session = Depends(get_session)
 ):
@@ -43,9 +46,10 @@ async def verify_user(
     return status.HTTP_200_OK
 
 
-#  @admin_required
 @admin_router.post("/block_user")
+@admin_required
 async def block_user(
+        request: Request,
         login_dto: LoginDto,
         session: Session = Depends(get_session)
 ):
@@ -57,9 +61,10 @@ async def block_user(
     return status.HTTP_200_OK
 
 
-#  @admin_required
 @admin_router.post("/unblock_user")
+@admin_required
 async def unblock_user(
+        request: Request,
         login_dto: LoginDto,
         session: Session = Depends(get_session)
 ):
@@ -71,9 +76,10 @@ async def unblock_user(
     return status.HTTP_200_OK
 
 
-#  @admin_required
 @admin_router.post("/change_role")
+@admin_required
 async def change_role(
+        request: Request,
         role_dto: RoleChangeDto,
         session: Session = Depends(get_session)
 ):

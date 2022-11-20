@@ -1,7 +1,9 @@
 import os
 
-from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel import Session, select, create_engine
 from dotenv import load_dotenv
+
+from typing import Optional
 
 from .models import *
 
@@ -26,10 +28,13 @@ with Session(engine) as session:
 
 
 def init_db():
-    print(engine)
     SQLModel.metadata.create_all(engine)
 
 
 def get_session():
     with Session(engine) as session:
         yield session
+
+
+def get_user(login: str) -> Optional[User]:
+    return session.exec(select(User).where(User.login == login)).first()
