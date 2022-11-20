@@ -37,6 +37,10 @@
 import {storeToRefs} from "pinia";
 import {useAuthStore} from "../../stores/auth";
 import {useRouter} from "vue-router";
+import {parseJwt} from "../../utils/other";
+import {CurrentUser} from "../../data/Users/CurrentUser";
+import {useUserStore} from "../../stores/user";
+import {useMoneyStore} from "../../stores/money";
 
 const {loginData} = storeToRefs(useAuthStore());
 const {submitLogin} = useAuthStore();
@@ -44,9 +48,28 @@ const {submitLogin} = useAuthStore();
 const router = useRouter();
 const loginError = ref("");
 
+const {user: cUser, token: globalToken} = storeToRefs(useUserStore())
+const {loadCurrencies} = useMoneyStore()
+
 const onClickSubmitLogin = () => {
   submitLogin()
       .then(() => {
+        const token = localStorage.getItem("token") || "";
+        if (token) {
+          try {
+            const user = parseJwt(token) as CurrentUser;
+
+            cUser.value = new CurrentUser(user.id, user.login, user.firstname, user.surname, user.verify, user.blocked, user.role);
+            cUser.value.loadAccounts();
+            loadCurrencies();
+          } catch (e) {
+            localStorage.removeItem("token");
+            router.push("/auth/login");
+          }
+        } else {
+          router.replace("/auth/login");
+        }
+
         router.replace("/")
       })
       .catch((e) => {

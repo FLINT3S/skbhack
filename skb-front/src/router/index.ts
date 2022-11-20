@@ -69,6 +69,14 @@ const router = createRouter({
       meta: {
         layout: MainLayout,
       }
+    },
+    {
+      path: "/account/:id",
+      name: "account",
+      component: () => import("../views/AccountView.vue"),
+      meta: {
+        layout: MainLayout,
+      }
     }
   ],
 });

@@ -11,7 +11,7 @@ console.log("Logout");
 const router = useRouter();
 
 Credentials.onLogout()
-router.replace("/auth/login");
+location.reload()
 </script>
 
 <style scoped></style>
